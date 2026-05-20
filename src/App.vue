@@ -1,21 +1,17 @@
 <script setup>
 import AppNavbar from '@/components/layout/AppNavbar.vue'
-import AppSidebar from '@/components/layout/AppSidebar.vue'
 import CreatePostModal from '@/components/post/CreatePostModal.vue'
 </script>
 
 <template>
   <AppNavbar />
   <div class="layout">
-    <AppSidebar />
     <main class="main">
-      <div class="main-inner">
-        <router-view v-slot="{ Component }">
-          <Transition name="fade" mode="out-in">
-            <component :is="Component" />
-          </Transition>
-        </router-view>
-      </div>
+      <router-view v-slot="{ Component }">
+        <Transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </router-view>
     </main>
   </div>
   <CreatePostModal />
@@ -23,24 +19,18 @@ import CreatePostModal from '@/components/post/CreatePostModal.vue'
 
 <style scoped>
 .layout {
-  /* Only the left sidebar is fixed; the right rail was removed. */
-  padding:
-    var(--space-5)
-    var(--space-5)
-    var(--space-6)
-    calc(var(--sidebar-width) + var(--space-5));
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
 }
 .main {
   min-width: 0;
-}
-.main-inner {
   max-width: var(--content-max);
   margin: 0 auto;
-  width: 100%;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 720px) {
   .layout {
     padding: var(--space-4);
   }

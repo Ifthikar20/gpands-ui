@@ -10,219 +10,168 @@ const ui = useUiStore()
 const user = useUserStore()
 const theme = useThemeStore()
 
-const query = ref('')
-const focused = ref(false)
-
-function onSearch(e) {
-  e.preventDefault()
-}
+const mobileOpen = ref(false)
+function closeMobile() { mobileOpen.value = false }
 </script>
 
 <template>
-  <header class="navbar">
-    <div class="navbar-inner">
-      <div class="left">
-        <button class="menu-btn" aria-label="Menu" @click="ui.toggleSidebar()">
-          <SvgIcon name="menu" :size="20" />
-        </button>
-        <router-link to="/" class="brand" aria-label="Home">
-          <span class="brand-mark"><SvgIcon name="gps" :size="26" /></span>
-          <span class="brand-text">
-            <span class="b-good">Good People</span><span class="b-amp"> &amp; </span><span class="b-story">Story</span>
-          </span>
-        </router-link>
-      </div>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <router-link to="/" class="brand" aria-label="Home" @click="closeMobile">
+        <span class="b-good">Good People</span>
+        <span class="b-amp">&amp;</span>
+        <span class="b-story">Story</span>
+      </router-link>
 
-      <form class="search" :class="{ focused }" @submit="onSearch">
-        <SvgIcon name="search" :size="18" />
-        <input
-          v-model="query"
-          type="text"
-          placeholder="Search stories, capsules, people"
-          @focus="focused = true"
-          @blur="focused = false"
-        />
-      </form>
+      <nav class="links" :class="{ open: mobileOpen }">
+        <router-link to="/" exact-active-class="active" @click="closeMobile">Home</router-link>
+        <router-link to="/popular" active-class="active" @click="closeMobile">Popular</router-link>
+        <router-link to="/capsules" active-class="active" @click="closeMobile">Capsules</router-link>
+        <router-link to="/about" active-class="active" @click="closeMobile">About</router-link>
+      </nav>
 
-      <div class="right">
-        <button class="share-btn" @click="ui.openCreatePost()">
-          <SvgIcon name="quote" :size="16" />
-          <span>Send a note</span>
-        </button>
+      <div class="actions">
         <button class="icon-btn" aria-label="Toggle theme" @click="theme.toggle()">
           <Transition name="fade" mode="out-in">
-            <SvgIcon v-if="theme.isDark" key="sun" name="sun" :size="20" />
-            <SvgIcon v-else key="moon" name="moon" :size="20" />
+            <SvgIcon v-if="theme.isDark" key="sun" name="sun" :size="18" />
+            <SvgIcon v-else key="moon" name="moon" :size="18" />
           </Transition>
         </button>
-        <button class="icon-btn" aria-label="Notifications">
-          <SvgIcon name="bell" :size="20" />
-          <span class="badge-dot" />
+        <button class="send" @click="ui.openCreatePost()">
+          <SvgIcon name="quote" :size="14" />
+          <span>Send a note</span>
         </button>
-        <router-link to="/u/me" class="user-chip" aria-label="My profile">
-          <UserAvatar :username="user.currentUser.username" :size="30" online />
+        <router-link to="/u/me" class="user" aria-label="My profile" @click="closeMobile">
+          <UserAvatar :username="user.currentUser.username" :size="32" online />
           <span class="user-name">{{ user.currentUser.displayName || user.currentUser.username }}</span>
         </router-link>
+        <button class="menu-btn" aria-label="Menu" @click="mobileOpen = !mobileOpen">
+          <SvgIcon :name="mobileOpen ? 'close' : 'menu'" :size="20" />
+        </button>
       </div>
     </div>
   </header>
 </template>
 
 <style scoped>
-.navbar {
+.masthead {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 30;
   height: var(--navbar-height);
-  background: var(--glass-strong);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid var(--glass-border);
+  background: var(--paper);
+  background-image:
+    repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px);
+  border-bottom: 1px solid var(--border-subtle);
 }
-.navbar-inner {
+.masthead-inner {
   height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-6);
   padding: 0 var(--space-5);
 }
 
-/* ── Left: menu + brand ───────────────────────────────────────── */
-.left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-.menu-btn {
-  display: none;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  align-items: center;
-  justify-content: center;
-  transition: background var(--dur-fast) var(--ease-out);
-}
-.menu-btn:hover { background: var(--bg-hover); }
-
+/* ── Brand: editorial masthead, not a tech logo ───────────── */
 .brand {
   display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+.b-good {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.b-amp {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--accent-orange);
+}
+.b-story {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ── Horizontal nav: simple text links ────────────────────── */
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin-left: var(--space-4);
+}
+.links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
+  letter-spacing: 0.005em;
+  padding: 6px 0;
+  position: relative;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.links a:hover { color: var(--text-primary); }
+.links a.active { color: var(--text-primary); }
+.links a.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: var(--accent-orange);
+  border-radius: 1px;
+}
+
+/* ── Right-side actions ───────────────────────────────────── */
+.actions {
+  margin-left: auto;
+  display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 8px;
-  border-radius: var(--radius-sm);
-  transition: background var(--dur-fast) var(--ease-out);
-  min-width: 0;
 }
-.brand:hover { background: var(--bg-hover); }
-.brand-mark {
-  color: var(--accent-orange);
-  display: inline-flex;
-  flex-shrink: 0;
-}
-.brand-text {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.b-good { color: var(--text-primary); }
-.b-amp { color: var(--accent-orange); font-weight: 800; }
-.b-story {
-  color: var(--text-primary);
-  font-style: italic;
-  font-family: var(--font-serif, Georgia, serif);
-}
-
-/* ── Center: search ───────────────────────────────────────────── */
-.search {
-  justify-self: center;
-  width: 100%;
-  max-width: 560px;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0 14px;
-  height: 40px;
-  background: var(--bg-elevated);
-  border: 1px solid transparent;
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
-}
-.search:hover { background: var(--bg-hover); }
-.search.focused {
-  background: var(--bg-canvas);
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px hsla(220 90% 60% / 0.18);
-}
-.search input {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-.search input::placeholder { color: var(--text-muted); }
-
-/* ── Right: actions ───────────────────────────────────────────── */
-.right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  min-width: 0;
-}
-.share-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: linear-gradient(135deg, var(--accent-orange), hsl(16 95% 48%));
-  color: white;
-  border-radius: var(--radius-pill);
-  font-weight: 700;
-  font-size: 13px;
-  white-space: nowrap;
-  box-shadow: var(--shadow-glow-orange);
-  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
-}
-.share-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
-
 .icon-btn {
-  position: relative;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--text-secondary);
+  color: var(--text-body);
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .icon-btn:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
 }
-.badge-dot {
-  position: absolute;
-  top: 9px;
-  right: 9px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent-orange);
-  box-shadow: 0 0 8px var(--accent-orange);
-}
 
-.user-chip {
+.send {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--text-primary);
+  color: var(--bg-canvas);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+}
+.send:hover { transform: translateY(-1px); filter: brightness(1.15); }
+
+.user {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -231,27 +180,67 @@ function onSearch(e) {
   color: var(--text-primary);
   transition: background var(--dur-fast) var(--ease-out);
 }
-.user-chip:hover { background: var(--bg-hover); }
+.user:hover { background: var(--bg-hover); }
 .user-name {
-  font-weight: 600;
   font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
   white-space: nowrap;
 }
 
-/* ── Responsive ───────────────────────────────────────────────── */
-@media (max-width: 1100px) {
-  .navbar-inner {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
+.menu-btn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-body);
 }
+.menu-btn:hover { background: var(--bg-hover); }
+
+/* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .menu-btn { display: inline-flex; }
   .user-name { display: none; }
-  .share-btn span { display: none; }
-  .share-btn { padding: 8px; }
+  .send span { display: none; }
+  .send { padding: 8px 12px; }
+  .links { gap: var(--space-4); }
+  .b-good, .b-story { font-size: 18px; }
+  .b-amp { font-size: 19px; }
 }
-@media (max-width: 640px) {
-  .brand-text { display: none; }
-  .navbar-inner { gap: var(--space-3); padding: 0 var(--space-3); }
+
+@media (max-width: 720px) {
+  .menu-btn { display: inline-flex; }
+  .links {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: var(--space-3) var(--space-5);
+    margin: 0;
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  }
+  .links.open {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .links a {
+    padding: 12px 0;
+    font-size: 16px;
+    font-family: var(--font-serif, Georgia, serif);
+    border-bottom: 1px solid var(--paper-line);
+  }
+  .links a:last-child { border-bottom: none; }
+  .links a.active::after { display: none; }
+  .links a.active { color: var(--accent-orange); }
 }
 </style>

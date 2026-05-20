@@ -5,6 +5,7 @@ import { useCommunitiesStore } from '@/stores/communities.js'
 import { usePostsStore } from '@/stores/posts.js'
 import { formatCount } from '@/composables/useVote.js'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
+import CapsuleChip from '@/components/common/CapsuleChip.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,44 +28,32 @@ const trending = computed(() => {
 })
 
 function go(name) {
-  router.push(`/r/${name}`)
+  router.push(`/c/${name}`)
 }
 </script>
 
 <template>
   <aside class="aside">
     <section v-if="community" class="card community-card">
-      <div class="community-head">
-        <span class="comm-icon" :style="{ background: community.color }">
-          <SvgIcon :name="community.icon" :size="20" />
-        </span>
-        <div class="community-meta">
-          <h3>r/{{ community.name }}</h3>
-          <p class="sub">{{ formatCount(community.members) }} members</p>
-        </div>
-        <button
-          class="follow"
-          :class="{ joined: communities.isJoined(community.name) }"
-          @click="communities.toggleJoin(community.name)"
-        >
-          {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
-        </button>
-      </div>
+      <CapsuleChip :name="community.name" size="lg" :linkable="false" />
+      <p class="member-count">{{ formatCount(community.members) }} members</p>
+      <button
+        class="follow"
+        :class="{ joined: communities.isJoined(community.name) }"
+        @click="communities.toggleJoin(community.name)"
+      >
+        {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
+      </button>
     </section>
 
     <section class="card">
-      <header class="trend-head">Trending now</header>
+      <header class="trend-head">Trending capsules</header>
       <ol class="trend-list">
         <li v-for="(c, i) in trending" :key="c.name">
           <button class="trend-row" @click="go(c.name)">
             <span class="rank">{{ i + 1 }}</span>
-            <span class="trend-icon" :style="{ background: c.color }">
-              <SvgIcon :name="c.icon" :size="14" />
-            </span>
-            <span class="trend-text">
-              <span class="trend-name">r/{{ c.name }}</span>
-              <span class="trend-sub">{{ formatCount(c.members) }} members</span>
-            </span>
+            <CapsuleChip :name="c.name" size="sm" :linkable="false" />
+            <span class="trend-sub">{{ formatCount(c.members) }}</span>
           </button>
         </li>
       </ol>
@@ -91,26 +80,17 @@ function go(name) {
   border-radius: var(--radius-card);
 }
 
-.community-card { padding: var(--space-4); }
-.community-head {
+.community-card {
+  padding: var(--space-4);
   display: flex;
-  align-items: center;
-  gap: var(--space-3);
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
 }
-.comm-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  display: grid;
-  place-items: center;
-  color: white;
-  flex-shrink: 0;
-}
-.community-meta { flex: 1; min-width: 0; }
-.community-meta h3 { font-size: 14px; font-weight: 700; }
-.community-meta .sub { font-size: 12px; color: var(--text-muted); }
+.member-count { font-size: 12px; color: var(--text-muted); }
 .follow {
-  padding: 6px 14px;
+  margin-top: 4px;
+  padding: 7px 18px;
   background: var(--accent-orange);
   color: white;
   font-weight: 700;
@@ -154,28 +134,12 @@ function go(name) {
   width: 18px;
   flex-shrink: 0;
 }
-.trend-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: var(--radius-sm);
-  display: grid;
-  place-items: center;
-  color: white;
-  flex-shrink: 0;
-}
-.trend-text {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-.trend-name {
-  font-size: 13px;
-  font-weight: 600;
-}
 .trend-sub {
+  margin-left: auto;
   font-size: 11px;
   color: var(--text-muted);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 1280px) {

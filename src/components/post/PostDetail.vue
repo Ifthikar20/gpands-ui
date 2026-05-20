@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import VoteWidget from '@/components/common/VoteWidget.vue'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
+import CapsuleChip from '@/components/common/CapsuleChip.vue'
 import { usePostsStore } from '@/stores/posts.js'
 import { useCommunitiesStore } from '@/stores/communities.js'
 import { useUserStore } from '@/stores/user.js'
@@ -35,15 +36,10 @@ function submitComment() {
     </div>
     <div class="content">
       <div class="meta">
-        <router-link :to="`/r/${post.subreddit}`" class="sub">
-          <span class="sub-icon" :style="{ background: community?.color || 'var(--accent-blue)' }">
-            <SvgIcon :name="community?.icon || 'globe'" :size="12" />
-          </span>
-          <span class="sub-name">r/{{ post.subreddit }}</span>
-        </router-link>
+        <CapsuleChip :name="post.subreddit" size="sm" />
         <span class="dot">•</span>
         <span class="muted" v-if="post.author === 'anonymous'">Posted anonymously</span>
-        <router-link v-else :to="`/u/${post.author}`" class="author-link">u/{{ post.author }}</router-link>
+        <router-link v-else :to="`/u/${post.author}`" class="author-link">{{ post.author.replace(/_/g, ' ') }}</router-link>
         <span class="muted">{{ time }}</span>
       </div>
 

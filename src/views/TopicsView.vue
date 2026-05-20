@@ -4,6 +4,7 @@ import { useCommunitiesStore } from '@/stores/communities.js'
 import { usePostsStore } from '@/stores/posts.js'
 import { formatCount } from '@/composables/useVote.js'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
+import CapsuleChip from '@/components/common/CapsuleChip.vue'
 
 const communities = useCommunitiesStore()
 const posts = usePostsStore()
@@ -27,12 +28,12 @@ function postCount(name) {
   <div class="topics">
     <header class="head">
       <div>
-        <h1>All Topics</h1>
-        <p class="muted">Pick a topic to read the stories — or find your own.</p>
+        <h1>All Capsules</h1>
+        <p class="muted">Pick a capsule to read the stories — or find your own.</p>
       </div>
       <div class="search">
         <SvgIcon name="search" :size="16" />
-        <input v-model="filter" placeholder="Search topics…" />
+        <input v-model="filter" placeholder="Search capsules…" />
       </div>
     </header>
 
@@ -40,7 +41,7 @@ function postCount(name) {
       <router-link
         v-for="c in list"
         :key="c.name"
-        :to="`/r/${c.name}`"
+        :to="`/c/${c.name}`"
         class="topic-card"
       >
         <div class="banner" :style="{ background: c.color }">
@@ -50,7 +51,7 @@ function postCount(name) {
         </div>
         <div class="meta">
           <div class="title-row">
-            <h3>r/{{ c.name }}</h3>
+            <CapsuleChip :name="c.name" size="sm" :linkable="false" />
             <button
               class="follow"
               :class="{ following: communities.isJoined(c.name) }"
@@ -59,7 +60,7 @@ function postCount(name) {
               {{ communities.isJoined(c.name) ? 'Following' : 'Follow' }}
             </button>
           </div>
-          <p class="sub-title">{{ c.title }}</p>
+          <h3 class="topic-title">{{ c.title }}</h3>
           <p class="desc">{{ c.description }}</p>
           <div class="stats">
             <span><strong>{{ formatCount(c.members) }}</strong> members</span>
@@ -70,7 +71,7 @@ function postCount(name) {
       </router-link>
     </div>
 
-    <div v-if="!list.length" class="empty">No topics match “{{ filter }}”.</div>
+    <div v-if="!list.length" class="empty">No capsules match “{{ filter }}”.</div>
   </div>
 </template>
 
@@ -144,8 +145,12 @@ function postCount(name) {
   justify-content: space-between;
   gap: var(--space-2);
 }
-.title-row h3 { font-size: 16px; font-weight: 800; }
-.sub-title { color: var(--text-secondary); font-size: 12px; font-weight: 600; }
+.topic-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-top: 6px;
+}
 .desc {
   color: var(--text-secondary);
   font-size: 13px;

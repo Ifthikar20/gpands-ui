@@ -66,12 +66,11 @@ const tabs = [
   <BaseModal v-model:open="open" title="Share your story" max-width="720px">
     <div class="form">
       <label class="field">
-        <span class="label">Topic</span>
+        <span class="label">Capsule</span>
         <div class="select">
-          <span class="prefix">r/</span>
           <select v-model="subreddit">
             <option v-for="c in communities.communities" :key="c.name" :value="c.name">
-              r/{{ c.name }} — {{ c.title }}
+              {{ c.name }} — {{ c.title }}
             </option>
           </select>
         </div>

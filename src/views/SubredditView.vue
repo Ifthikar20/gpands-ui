@@ -7,6 +7,7 @@ import { useCommunitiesStore } from '@/stores/communities.js'
 import { useUiStore } from '@/stores/ui.js'
 import { formatCount } from '@/composables/useVote.js'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
+import CapsuleChip from '@/components/common/CapsuleChip.vue'
 
 const route = useRoute()
 const postsStore = usePostsStore()
@@ -31,7 +32,8 @@ const posts = computed(() => {
           <SvgIcon :name="community.icon" :size="36" />
         </span>
         <div class="banner-info">
-          <h1>r/{{ community.name }}</h1>
+          <CapsuleChip :name="community.name" size="lg" :linkable="false" />
+          <h1 class="title">{{ community.title }}</h1>
           <p class="muted">{{ formatCount(community.members) }} members · <span class="online"><span class="dot" />{{ formatCount(community.online) }} online</span></p>
         </div>
         <button
@@ -39,7 +41,7 @@ const posts = computed(() => {
           :class="{ joined: communities.isJoined(community.name) }"
           @click="communities.toggleJoin(community.name)"
         >
-          {{ communities.isJoined(community.name) ? 'Joined' : 'Join' }}
+          {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
         </button>
       </div>
     </header>
@@ -51,8 +53,8 @@ const posts = computed(() => {
           <SvgIcon name="globe" :size="36" />
         </span>
         <div class="banner-info">
-          <h1>r/{{ subreddit }}</h1>
-          <p class="muted">This community doesn't exist (yet).</p>
+          <h1 class="title">{{ subreddit }}</h1>
+          <p class="muted">This capsule doesn't exist (yet).</p>
         </div>
       </div>
     </header>
@@ -94,8 +96,19 @@ const posts = computed(() => {
   background: var(--bg-elevated);
   color: var(--text-muted);
 }
-.banner-info { flex: 1; padding-top: 28px; }
-.banner-info h1 { font-size: 22px; font-weight: 800; }
+.banner-info {
+  flex: 1;
+  padding-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.banner-info .title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
 .muted { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 .online { color: var(--success); display: inline-flex; align-items: center; gap: 4px; }
 .online .dot {

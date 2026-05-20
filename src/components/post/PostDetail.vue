@@ -1,26 +1,31 @@
 <script setup>
 import { ref, computed } from 'vue'
-import VoteWidget from '@/components/common/VoteWidget.vue'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
-import CapsuleChip from '@/components/common/CapsuleChip.vue'
+import UserAvatar from '@/components/common/UserAvatar.vue'
 import { usePostsStore } from '@/stores/posts.js'
-import { useCommunitiesStore } from '@/stores/communities.js'
-import { useUserStore } from '@/stores/user.js'
 import { useRelativeTime } from '@/composables/useRelativeTime.js'
 import { formatCount } from '@/composables/useVote.js'
 
 const props = defineProps({ post: { type: Object, required: true } })
 const postsStore = usePostsStore()
-const communities = useCommunitiesStore()
-const user = useUserStore()
 const time = useRelativeTime(() => props.post.createdAt)
+
+const isAnonymous = computed(() => props.post.author === 'anonymous')
 const community = computed(() => communities.getCommunity(props.post.subreddit))
+const formattedAuthor = computed(() =>
+  isAnonymous.value ? 'Stranger' : props.post.author.replace(/_/g, ' '),
+)
+const paragraphs = computed(() =>
+  (props.post.body || '').split('\n\n').filter(Boolean),
+)
+const paperClass = computed(() => `paper-${props.post.paperStyle || 'cream'}`)
 
 const newComment = ref('')
 
-function vote(direction) {
-  postsStore.votePost(props.post.id, direction)
+function resonate() {
+  postsStore.votePost(props.post.id, 1)
 }
+
 function submitComment() {
   const text = newComment.value.trim()
   if (!text) return
@@ -30,167 +35,273 @@ function submitComment() {
 </script>
 
 <template>
-  <article class="detail paper">
-    <div class="vote-col">
-      <VoteWidget :score="post.score" :user-vote="post.userVote" @vote="vote" />
+  <article :class="['letter-detail', paperClass, { named: !isAnonymous }]">
+    <p class="dear">
+      <span class="dear-prefix">Dear&hellip;</span>
+      <span class="dear-name">{{ post.subreddit }}</span>
+    </p>
+
+    <h1 class="title">{{ post.title }}</h1>
+
+    <div v-if="post.image && post.type === 'image'" class="postcard">
+      <img :src="post.image" :alt="post.title" />
     </div>
-    <div class="content">
-      <div class="meta">
-        <CapsuleChip :name="post.subreddit" size="sm" />
-        <span class="dot">•</span>
-        <span class="muted" v-if="post.author === 'anonymous'">Posted anonymously</span>
-        <router-link v-else :to="`/u/${post.author}`" class="author-link">{{ post.author.replace(/_/g, ' ') }}</router-link>
-        <span class="muted">{{ time }}</span>
-      </div>
 
-      <h1 class="title">{{ post.title }}</h1>
+    <div v-if="paragraphs.length" class="body">
+      <p v-for="(para, i) in paragraphs" :key="i">{{ para }}</p>
+    </div>
 
-      <p v-if="post.body" class="body">{{ post.body }}</p>
+    <p class="from">
+      <span class="from-prefix">From&hellip;</span>
+      <UserAvatar
+        v-if="!isAnonymous"
+        :username="post.author"
+        :size="22"
+        class="from-avatar"
+      />
+      <span class="from-name">{{ formattedAuthor }}</span>
+    </p>
+    <p class="time">{{ time }}</p>
 
-      <div v-if="post.type === 'image' && post.image" class="media">
-        <img :src="post.image" :alt="post.title" />
-      </div>
+    <div class="rule" aria-hidden="true" />
 
-      <div class="actions">
-        <div class="action">
-          <SvgIcon name="comment" :size="18" />
-          <span>{{ formatCount(post.commentCount) }} Comments</span>
-        </div>
-        <button class="action">
-          <SvgIcon name="share" :size="18" />
-          <span>Share</span>
-        </button>
-        <button class="action">
-          <SvgIcon name="save" :size="18" />
-          <span>Save</span>
-        </button>
-        <button class="action">
-          <SvgIcon name="award" :size="18" />
-          <span>Award</span>
-        </button>
-      </div>
+    <div class="actions">
+      <button
+        class="resonate"
+        :class="{ active: post.userVote === 1 }"
+        @click="resonate"
+      >
+        <SvgIcon name="heart" :size="14" />
+        <span>{{ post.userVote === 1 ? 'Resonated' : 'Resonate' }} &middot; {{ formatCount(post.score) }}</span>
+      </button>
+    </div>
 
-      <div class="comment-box">
-        <p class="comment-label">
-          Comment as <span class="self">u/{{ user.currentUser.username }}</span>
-        </p>
-        <textarea v-model="newComment" rows="4" placeholder="What are your thoughts?" />
-        <div class="comment-actions">
-          <button class="btn primary" :disabled="!newComment.trim()" @click="submitComment">Comment</button>
-        </div>
+    <div class="write-back">
+      <label class="wb-label" for="wb-input">Write back</label>
+      <textarea
+        id="wb-input"
+        v-model="newComment"
+        rows="4"
+        placeholder="A few lines back to the writer&hellip;"
+        class="wb-input"
+      />
+      <div class="wb-actions">
+        <button
+          class="send-reply"
+          :disabled="!newComment.trim()"
+          @click="submitComment"
+        >Send</button>
       </div>
     </div>
   </article>
 </template>
 
 <style scoped>
-.detail {
-  display: flex;
-  gap: var(--space-4);
-  border-radius: var(--radius-card);
-  padding: var(--space-5) var(--space-6);
-}
-.vote-col {
-  background: var(--bg-elevated);
-  padding: var(--space-2);
-  border-radius: var(--radius-md);
-  align-self: flex-start;
-}
-.content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-3); }
-.meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  flex-wrap: wrap;
-}
-.sub {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-.sub:hover { text-decoration: underline; }
-.sub-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: white;
-}
-.muted { color: var(--text-muted); }
-.dot { color: var(--text-muted); }
-.author-link { font-weight: 600; color: var(--text-secondary); }
-.author-link:hover { text-decoration: underline; color: var(--text-primary); }
-
-.title { font-size: 22px; font-weight: 700; line-height: 1.3; }
-.body { font-size: 15px; line-height: 1.6; color: var(--text-primary); white-space: pre-wrap; }
-.media {
-  border-radius: var(--radius-md);
-  overflow: hidden;
+.letter-detail {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  background-color: var(--paper-bg, var(--paper));
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px),
+    radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.03), transparent 60%);
+  background-blend-mode: multiply, normal, normal;
   border: 1px solid var(--border-subtle);
-  background: var(--bg-canvas);
-}
-.media img {
-  width: 100%;
-  height: auto;
-  max-height: 640px;
-  object-fit: contain;
-}
-.actions {
-  display: flex;
-  gap: 2px;
-  margin-top: 4px;
-  flex-wrap: wrap;
-}
-.action {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
-}
-button.action { cursor: pointer; }
-button.action:hover { background: var(--bg-hover); color: var(--text-primary); }
-
-.comment-box {
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px var(--paper-shadow), 0 12px 28px hsla(0 0% 0% / 0.05);
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: var(--space-2);
+  gap: var(--space-4);
 }
-.comment-label { font-size: 12px; color: var(--text-muted); }
-.self { color: var(--accent-blue); font-weight: 600; }
-.comment-box textarea {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
+:root[data-theme='dark'] .letter-detail {
+  background-blend-mode: screen, normal, normal;
+}
+
+.dear {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-body);
+}
+.dear-prefix { color: var(--text-muted); margin-right: 6px; }
+.dear-name {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.postcard {
+  align-self: center;
+  max-width: 520px;
+  width: 100%;
   border-radius: var(--radius-sm);
-  padding: 12px;
-  font-size: 14px;
-  resize: vertical;
-  min-height: 96px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px hsla(0 0% 0% / 0.22);
+  transform: rotate(-1deg);
+  background: white;
+  padding: 6px 6px 10px;
 }
-.comment-box textarea:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px hsla(220 90% 60% / 0.18);
+.postcard img { display: block; width: 100%; height: auto; }
+
+.body {
+  text-align: left;
+  max-width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  color: var(--text-primary);
+  font-family: var(--font-typewriter);
+  font-size: 15px;
+  line-height: 1.85;
 }
-.comment-actions { display: flex; justify-content: flex-end; }
-.btn {
-  padding: 8px 16px;
-  border-radius: var(--radius-pill);
+
+.from {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin: var(--space-4) auto 0;
+  color: var(--text-muted);
+}
+.from-prefix {
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   font-weight: 700;
-  font-size: 13px;
-  transition: background var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
 }
-.btn.primary { background: var(--accent-orange); color: white; }
-.btn.primary:hover:not(:disabled) { filter: brightness(1.1); }
-.btn.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.from-avatar { align-self: center; }
+.from-name { color: var(--text-primary); }
+.letter-detail.named .from-name {
+  font-family: var(--font-script);
+  font-size: 30px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--accent-orange);
+  transform: rotate(-2deg);
+  line-height: 1;
+}
+.letter-detail:not(.named) .from-name {
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.time {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.rule {
+  height: 1px;
+  margin: var(--space-4) auto;
+  width: 80px;
+  background: var(--paper-line);
+}
+
+.actions { display: flex; justify-content: center; }
+.resonate {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.resonate:hover {
+  color: var(--accent-orange);
+  border-color: var(--accent-orange);
+}
+.resonate.active {
+  color: var(--accent-orange);
+  border-color: var(--accent-orange);
+  background: var(--accent-orange-soft);
+}
+
+.write-back {
+  max-width: 560px;
+  margin: var(--space-5) auto 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.wb-label {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.wb-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--border-strong);
+  padding: 10px 0;
+  font-family: var(--font-typewriter);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.wb-input::placeholder {
+  font-style: italic;
+  color: var(--text-muted);
+  font-family: var(--font-serif, Georgia, serif);
+}
+.wb-input:focus { border-color: var(--accent-orange); }
+.wb-actions { display: flex; justify-content: flex-end; }
+.send-reply {
+  padding: 7px 16px;
+  background: var(--text-primary);
+  color: var(--bg-canvas);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter var(--dur-fast) var(--ease-out);
+}
+.send-reply:hover:not(:disabled) { filter: brightness(1.15); }
+.send-reply:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+  .letter-detail { padding: var(--space-6) var(--space-4); }
+  .title { font-size: 24px; }
+  .body { font-size: 14px; }
+}
 </style>

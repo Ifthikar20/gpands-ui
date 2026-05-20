@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PostDetail from '@/components/post/PostDetail.vue'
 import CommentThread from '@/components/comment/CommentThread.vue'
-import SvgIcon from '@/components/icons/SvgIcon.vue'
 import { usePostsStore } from '@/stores/posts.js'
 
 const route = useRoute()
@@ -20,10 +19,7 @@ function back() {
 
 <template>
   <div class="post-view">
-    <button class="back" @click="back">
-      <SvgIcon name="chevronDown" :size="16" class="back-arrow" />
-      <span>Back</span>
-    </button>
+    <button class="back" @click="back">&larr; Return</button>
 
     <template v-if="post">
       <PostDetail :post="post" />
@@ -31,43 +27,61 @@ function back() {
     </template>
 
     <div v-else class="missing paper">
-      <h2>Post not found</h2>
-      <p>The post you're looking for doesn't exist or has been removed.</p>
-      <router-link to="/" class="back-link">Back to home</router-link>
+      <h2>This letter wasn't found.</h2>
+      <p>It may have been removed, or the link is wrong.</p>
+      <router-link to="/" class="back-link">Back to the feed</router-link>
     </div>
   </div>
 </template>
 
 <style scoped>
-.post-view { display: flex; flex-direction: column; gap: var(--space-3); }
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
-  width: fit-content;
-  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+.post-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
-.back:hover { background: var(--bg-hover); color: var(--text-primary); }
-.back-arrow { transform: rotate(90deg); }
+.back {
+  align-self: flex-start;
+  padding: 4px 6px 4px 0;
+  background: transparent;
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.back:hover { color: var(--text-primary); }
 
 .missing {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   padding: var(--space-8);
   text-align: center;
 }
-.missing h2 { font-size: 18px; margin-bottom: 8px; }
-.missing p { color: var(--text-muted); margin-bottom: var(--space-4); }
+.missing h2 {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+  color: var(--text-primary);
+}
+.missing p {
+  font-family: var(--font-typewriter);
+  font-size: 14px;
+  color: var(--text-body);
+  margin-bottom: var(--space-5);
+}
 .back-link {
   display: inline-block;
-  padding: 8px 16px;
-  background: var(--accent-orange);
-  color: white;
-  border-radius: var(--radius-pill);
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-orange);
   font-weight: 700;
 }
+.back-link:hover { text-decoration: underline; }
 </style>

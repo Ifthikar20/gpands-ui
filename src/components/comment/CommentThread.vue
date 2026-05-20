@@ -11,31 +11,28 @@ const sort = ref('best')
 const sorted = computed(() => {
   const list = [...props.comments]
   switch (sort.value) {
-    case 'new':
-      return list.sort((a, b) => b.createdAt - a.createdAt)
-    case 'top':
-      return list.sort((a, b) => b.score - a.score)
+    case 'new': return list.sort((a, b) => b.createdAt - a.createdAt)
+    case 'top': return list.sort((a, b) => b.score - a.score)
     case 'best':
-    default:
-      return list.sort((a, b) => b.score - a.score)
+    default: return list.sort((a, b) => b.score - a.score)
   }
 })
 </script>
 
 <template>
-  <section class="thread paper">
-    <div class="thread-head">
-      <span class="muted">Sort by</span>
-      <div class="sort-select">
-        <select v-model="sort">
-          <option value="best">Best</option>
-          <option value="top">Top</option>
-          <option value="new">New</option>
-        </select>
-      </div>
-    </div>
+  <section class="thread">
+    <header class="head">
+      <span class="label">Replies &middot; {{ comments.length }}</span>
+      <select v-model="sort" class="sort" aria-label="Sort replies">
+        <option value="best">Best</option>
+        <option value="top">Top</option>
+        <option value="new">New</option>
+      </select>
+    </header>
 
-    <div v-if="!comments.length" class="empty">No comments yet — be the first to comment.</div>
+    <p v-if="!comments.length" class="empty">
+      No replies yet. Be the first to write back.
+    </p>
 
     <div v-else class="list">
       <CommentItem
@@ -51,40 +48,49 @@ const sorted = computed(() => {
 
 <style scoped>
 .thread {
-  border-radius: var(--radius-card);
-  padding: var(--space-5) var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  max-width: 720px;
+  margin: var(--space-8) auto 0;
+  padding: 0 var(--space-6);
 }
-.thread-head {
+.head {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px dashed var(--paper-line);
+  margin-bottom: var(--space-4);
 }
-.muted { color: var(--text-muted); font-size: 12px; }
-.sort-select select {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 6px 10px;
+.label {
+  font-family: var(--font-typewriter);
   font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.sort-select select option { background: var(--bg-elevated); }
-.empty {
-  padding: var(--space-6);
-  text-align: center;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--text-muted);
+  font-weight: 700;
+}
+.sort {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  outline: none;
+}
+.empty {
+  text-align: center;
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  color: var(--text-muted);
+  padding: var(--space-6);
 }
 .list {
   display: flex;
   flex-direction: column;
 }
-.list > :not(:first-child) {
-  border-top: 1px solid var(--border-subtle);
+
+@media (max-width: 640px) {
+  .thread { padding: 0 var(--space-4); }
 }
 </style>

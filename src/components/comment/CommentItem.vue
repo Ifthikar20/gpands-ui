@@ -1,7 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import VoteWidget from '@/components/common/VoteWidget.vue'
-import SvgIcon from '@/components/icons/SvgIcon.vue'
 import UserAvatar from '@/components/common/UserAvatar.vue'
 import { usePostsStore } from '@/stores/posts.js'
 import { useRelativeTime } from '@/composables/useRelativeTime.js'
@@ -13,19 +11,14 @@ const props = defineProps({
 })
 
 const posts = usePostsStore()
-const collapsed = ref(false)
+const time = useRelativeTime(() => props.comment.createdAt)
 const replyOpen = ref(false)
 const replyText = ref('')
-const time = useRelativeTime(() => props.comment.createdAt)
 
-const lineColor = computed(() => {
-  const hue = (200 + props.depth * 35) % 360
-  return `hsl(${hue} 60% 45%)`
-})
-
-function vote(direction) {
-  posts.voteComment(props.postId, props.comment.id, direction)
-}
+const isAnonymous = computed(() => props.comment.author === 'anonymous')
+const displayName = computed(() =>
+  isAnonymous.value ? 'Stranger' : props.comment.author.replace(/_/g, ' '),
+)
 
 function submitReply() {
   const text = replyText.value.trim()
@@ -34,174 +27,169 @@ function submitReply() {
   replyText.value = ''
   replyOpen.value = false
 }
+
+function resonate() {
+  posts.voteComment(props.postId, props.comment.id, 1)
+}
 </script>
 
 <template>
-  <div class="comment" :style="{ '--line': lineColor }">
-    <div class="rail">
-      <button class="collapse" :aria-label="collapsed ? 'Expand' : 'Collapse'" @click="collapsed = !collapsed">
-        <UserAvatar :username="comment.author" :size="28" />
+  <div class="reply" :style="{ marginLeft: `${depth * 28}px` }">
+    <header class="head">
+      <UserAvatar
+        v-if="!isAnonymous"
+        :username="comment.author"
+        :size="22"
+        class="avatar"
+      />
+      <span class="author" :class="{ anon: isAnonymous }">{{ displayName }}</span>
+      <span class="time">&mdash; {{ time }}</span>
+    </header>
+
+    <div class="body">{{ comment.body }}</div>
+
+    <footer class="actions">
+      <button
+        class="act"
+        :class="{ on: comment.userVote === 1 }"
+        @click="resonate"
+      >Resonate &middot; {{ comment.score }}</button>
+      <button class="act" @click="replyOpen = !replyOpen">
+        {{ replyOpen ? 'Cancel' : 'Reply' }}
       </button>
-      <button v-if="!collapsed" class="line" :aria-label="'Collapse thread'" @click="collapsed = true" />
+    </footer>
+
+    <div v-if="replyOpen" class="reply-box">
+      <textarea
+        v-model="replyText"
+        rows="3"
+        placeholder="A few lines back&hellip;"
+      />
+      <button
+        class="send"
+        :disabled="!replyText.trim()"
+        @click="submitReply"
+      >Send</button>
     </div>
 
-    <div class="body-col">
-      <header class="meta">
-        <span v-if="comment.author === 'anonymous'" class="author muted">anonymous</span>
-        <router-link v-else :to="`/u/${comment.author}`" class="author">u/{{ comment.author }}</router-link>
-        <span class="dot">•</span>
-        <span class="muted">{{ time }}</span>
-        <button v-if="collapsed" class="expand" @click="collapsed = false">[+] {{ comment.children?.length || 0 }} more</button>
-      </header>
-
-      <div v-if="!collapsed" class="text">{{ comment.body }}</div>
-
-      <footer v-if="!collapsed" class="actions">
-        <VoteWidget
-          :score="comment.score"
-          :user-vote="comment.userVote"
-          orientation="horizontal"
-          size="sm"
-          @vote="vote"
-        />
-        <button class="action" @click="replyOpen = !replyOpen">
-          <SvgIcon name="reply" :size="14" />
-          <span>Reply</span>
-        </button>
-        <button class="action">
-          <SvgIcon name="share" :size="14" />
-          <span>Share</span>
-        </button>
-        <button class="action">
-          <SvgIcon name="save" :size="14" />
-          <span>Save</span>
-        </button>
-      </footer>
-
-      <div v-if="replyOpen && !collapsed" class="reply-box">
-        <textarea v-model="replyText" placeholder="What are your thoughts?" rows="3" />
-        <div class="reply-actions">
-          <button class="btn ghost" @click="replyOpen = false">Cancel</button>
-          <button class="btn primary" :disabled="!replyText.trim()" @click="submitReply">Reply</button>
-        </div>
-      </div>
-
-      <div v-if="!collapsed && comment.children?.length" class="children">
-        <CommentItem
-          v-for="child in comment.children"
-          :key="child.id"
-          :comment="child"
-          :post-id="postId"
-          :depth="depth + 1"
-        />
-      </div>
-    </div>
+    <CommentItem
+      v-for="child in comment.children"
+      :key="child.id"
+      :comment="child"
+      :post-id="postId"
+      :depth="depth + 1"
+    />
   </div>
 </template>
 
 <style scoped>
-.comment {
-  display: flex;
-  gap: var(--space-3);
-  padding-top: var(--space-3);
+.reply {
+  padding: var(--space-3) 0;
+  border-bottom: 1px dashed var(--paper-line);
 }
-.rail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.collapse { padding: 0; border-radius: 50%; }
-.line {
-  flex: 1;
-  width: 2px;
-  background: var(--line);
-  opacity: 0.35;
-  border-radius: var(--radius-pill);
-  margin: 4px 0;
-  transition: opacity var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
-}
-.line:hover { opacity: 0.7; background: var(--accent-blue); }
+.reply:last-child { border-bottom: none; }
 
-.body-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.meta {
+.head {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
-.author { font-weight: 700; color: var(--text-primary); }
-.muted { color: var(--text-muted); }
-.dot { color: var(--text-muted); }
-.expand {
-  margin-left: 8px;
-  color: var(--accent-blue);
+.avatar { box-shadow: 0 1px 2px hsla(0 0% 0% / 0.15); }
+.author {
+  font-family: var(--font-script);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--accent-orange);
   font-weight: 600;
+  text-transform: capitalize;
+  transform: rotate(-1deg);
+  transform-origin: left center;
+}
+.author.anon {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transform: none;
+  font-weight: 700;
+}
+.time {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
   font-size: 12px;
+  color: var(--text-muted);
+  margin-left: auto;
 }
 
-.text {
+.body {
+  font-family: var(--font-typewriter);
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.75;
   color: var(--text-primary);
   white-space: pre-wrap;
+  padding-left: 30px;
 }
 
 .actions {
   display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 2px;
+  gap: 16px;
+  margin-top: 8px;
+  padding-left: 30px;
 }
-.action {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 600;
+.act {
+  background: transparent;
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-muted);
-  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+  font-weight: 700;
+  transition: color var(--dur-fast) var(--ease-out);
 }
-.action:hover { background: var(--bg-hover); color: var(--text-primary); }
+.act:hover { color: var(--text-primary); }
+.act.on { color: var(--accent-orange); }
 
 .reply-box {
-  margin-top: 6px;
+  margin: 10px 0 0 30px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 .reply-box textarea {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  font-size: 14px;
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  padding: 10px;
+  font-family: var(--font-typewriter);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-primary);
   resize: vertical;
-  width: 100%;
-}
-.reply-box textarea:focus {
   outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px hsla(220 90% 60% / 0.18);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
-.reply-actions { display: flex; gap: 8px; justify-content: flex-end; }
-.btn {
-  padding: 7px 14px;
+.reply-box textarea::placeholder {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+}
+.reply-box textarea:focus { border-color: var(--accent-orange); }
+.send {
+  align-self: flex-end;
+  padding: 6px 14px;
+  background: var(--text-primary);
+  color: var(--bg-canvas);
   border-radius: var(--radius-pill);
+  font-family: var(--font-typewriter);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   font-weight: 700;
-  font-size: 12px;
-  transition: background var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+  transition: filter var(--dur-fast) var(--ease-out);
 }
-.btn.ghost { color: var(--text-secondary); }
-.btn.ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
-.btn.primary { background: var(--accent-orange); color: white; }
-.btn.primary:hover:not(:disabled) { filter: brightness(1.1); }
-.btn.primary:disabled { opacity: 0.45; cursor: not-allowed; }
-
-.children {
-  display: flex;
-  flex-direction: column;
-}
+.send:hover:not(:disabled) { filter: brightness(1.15); }
+.send:disabled { opacity: 0.4; cursor: not-allowed; }
 </style>

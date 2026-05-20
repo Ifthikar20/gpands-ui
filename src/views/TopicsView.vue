@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useCommunitiesStore } from '@/stores/communities.js'
-import SvgIcon from '@/components/icons/SvgIcon.vue'
 
 const communities = useCommunitiesStore()
 
@@ -17,119 +16,100 @@ const list = computed(() => {
 </script>
 
 <template>
-  <div class="capsules-view">
-    <header class="head">
-      <h1>Pick a capsule</h1>
-      <p class="muted">Every capsule is a place to send a note. Tap one to read what's inside.</p>
-      <div class="search">
-        <SvgIcon name="search" :size="16" />
-        <input v-model="filter" placeholder="Search capsules…" />
-      </div>
-    </header>
+  <div class="capsules">
+    <input
+      v-model="filter"
+      type="text"
+      class="filter"
+      placeholder="Find a capsule"
+    />
 
-    <nav class="cloud">
-      <router-link
-        v-for="c in list"
-        :key="c.name"
-        :to="`/c/${c.name}`"
-        class="tag"
-        :class="{ joined: communities.isJoined(c.name) }"
-      >
-        {{ c.title }}
-      </router-link>
-    </nav>
+    <ul class="list">
+      <li v-for="c in list" :key="c.name">
+        <router-link :to="`/c/${c.name}`" class="entry">
+          <span class="name">{{ c.name }}</span>
+          <span class="title">{{ c.title }}</span>
+        </router-link>
+      </li>
+    </ul>
 
-    <div v-if="!list.length" class="empty">No capsules match “{{ filter }}”.</div>
+    <p v-if="!list.length" class="empty">no capsules match.</p>
   </div>
 </template>
 
 <style scoped>
-.capsules-view {
+.capsules {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  padding-top: var(--space-4);
-}
-.head {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-.head h1 {
-  font-family: var(--font-script);
-  font-size: 48px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  color: var(--text-primary);
-  line-height: 1;
-}
-.muted {
-  color: var(--text-body);
-  font-size: 16px;
-  line-height: 1.7;
-  max-width: 480px;
+  padding: var(--space-6) 0;
 }
 
-.search {
-  margin-top: var(--space-4);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 14px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-pill);
-  width: 280px;
-  color: var(--text-muted);
-}
-.search input {
+.filter {
+  align-self: center;
+  width: 240px;
   background: transparent;
   border: none;
-  outline: none;
-  padding: 10px 0;
-  width: 100%;
+  border-bottom: 1px dashed var(--border-strong);
+  padding: 8px 4px;
+  font-family: var(--font-typewriter);
+  font-size: 13px;
+  letter-spacing: 0.06em;
   color: var(--text-primary);
-  font-size: 14px;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.filter::placeholder {
+  color: var(--text-muted);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+.filter:focus { border-color: var(--accent-orange); }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  align-items: center;
+  margin: 0;
+  padding: var(--space-4) 0;
 }
 
-.cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 28px;
-  justify-content: center;
-  padding: var(--space-6) var(--space-4) var(--space-8);
-  max-width: 980px;
-  margin: 0 auto;
-  line-height: 1.6;
+.entry {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   text-align: center;
+  transition: transform var(--dur-fast) var(--ease-out);
 }
-.tag {
+.entry:hover { transform: translateY(-1px); }
+
+.name {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.title {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: clamp(18px, 1.6vw, 24px);
+  font-style: italic;
+  font-size: 22px;
   font-weight: 500;
-  letter-spacing: -0.005em;
-  color: hsla(34 4% 41% / 0.4);
-  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
-  cursor: pointer;
-  white-space: nowrap;
-}
-:root[data-theme='dark'] .tag {
-  color: hsla(35 8% 70% / 0.35);
-}
-.tag:hover {
   color: var(--text-primary);
-  transform: translateY(-1px);
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  transition: color var(--dur-fast) var(--ease-out);
 }
-.tag.joined {
-  color: var(--accent-orange);
-  font-weight: 600;
-}
+.entry:hover .title { color: var(--accent-orange); }
 
 .empty {
   text-align: center;
-  padding: var(--space-8);
+  font-family: var(--font-typewriter);
+  font-size: 13px;
   color: var(--text-muted);
+  padding: var(--space-6) 0;
 }
 </style>

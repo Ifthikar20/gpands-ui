@@ -57,6 +57,7 @@ function onKey(e) {
   >
     <!-- Envelope decorations for sealed anonymous letters -->
     <template v-if="isAnonymous">
+      <div class="env-interior" aria-hidden="true" />
       <div class="env-flap" aria-hidden="true" />
       <button
         class="wax"
@@ -117,8 +118,10 @@ function onKey(e) {
   padding: var(--space-8) var(--space-6) var(--space-6);
   background-color: var(--paper-bg, var(--paper));
   background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
     repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px),
     radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.03), transparent 60%);
+  background-blend-mode: multiply, normal, normal;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   box-shadow: 0 1px 2px var(--paper-shadow), 0 12px 28px hsla(0 0% 0% / 0.05);
@@ -131,8 +134,9 @@ function onKey(e) {
   gap: var(--space-4);
   perspective: 1500px;
   perspective-origin: 50% 0%;
-  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), padding-top 600ms var(--ease-out);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), padding-top 700ms var(--ease-out);
 }
+:root[data-theme='dark'] .letter { background-blend-mode: screen, normal, normal; }
 .letter:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px var(--paper-shadow), 0 18px 36px hsla(0 0% 0% / 0.08);
@@ -200,7 +204,7 @@ function onKey(e) {
 }
 .reveal.open .reveal-inner { opacity: 1; transform: none; }
 .letter.named .reveal-inner { transition-delay: 0ms; }
-.letter:not(.sealed):not(.named) .reveal-inner { transition-delay: 380ms; }
+.letter:not(.sealed):not(.named) .reveal-inner { transition-delay: 620ms; }
 
 /* ── Postcard (image post — PostSecret style) ───────────── */
 .postcard {
@@ -296,12 +300,13 @@ function onKey(e) {
   top: 0;
   left: 0;
   right: 0;
-  height: 140px;
+  height: 150px;
   background-color: var(--paper-bg, var(--paper));
   background-image:
-    linear-gradient(180deg, hsla(0 0% 0% / 0.06), transparent 50%),
-    radial-gradient(ellipse at top, hsla(0 0% 100% / 0.12), transparent 70%),
-    repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px);
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    linear-gradient(180deg, hsla(0 0% 0% / 0.08), transparent 55%),
+    radial-gradient(ellipse at top, hsla(0 0% 100% / 0.14), transparent 70%);
+  background-blend-mode: multiply, normal, normal;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
   filter: drop-shadow(0 8px 14px hsla(0 0% 0% / 0.22));
@@ -309,14 +314,48 @@ function onKey(e) {
   transform: rotateX(0);
   opacity: 1;
 }
+:root[data-theme='dark'] .env-flap { background-blend-mode: screen, normal, normal; }
+
 .letter:not(.sealed) .env-flap {
   pointer-events: none;
-  animation: flap-lift 780ms cubic-bezier(0.4, 0, 0.3, 1) 180ms both;
+  animation: flap-lift 1100ms cubic-bezier(0.65, 0, 0.25, 1) 220ms both;
 }
+/* Multi-stage easing: small initial peel, hesitation, then full
+   rotation back. Reads as a thumb sliding under the flap. */
 @keyframes flap-lift {
-  0%   { transform: rotateX(0); opacity: 1; filter: drop-shadow(0 8px 14px hsla(0 0% 0% / 0.22)); }
-  18%  { transform: rotateX(-18deg);          filter: drop-shadow(0 18px 24px hsla(0 0% 0% / 0.32)); }
-  100% { transform: rotateX(-172deg); opacity: 0; filter: drop-shadow(0 0 0 transparent); }
+  0%   { transform: rotateX(0deg);    opacity: 1; filter: drop-shadow(0 8px 14px hsla(0 0% 0% / 0.22)); }
+  10%  { transform: rotateX(-6deg);               filter: drop-shadow(0 12px 18px hsla(0 0% 0% / 0.28)); }
+  28%  { transform: rotateX(-28deg);              filter: drop-shadow(0 22px 28px hsla(0 0% 0% / 0.36)); }
+  85%  { transform: rotateX(-160deg); opacity: 0.6; filter: drop-shadow(0 0 0 transparent); }
+  100% { transform: rotateX(-178deg); opacity: 0;   filter: drop-shadow(0 0 0 transparent); }
+}
+
+/* The dark "inside" of the envelope revealed as the flap lifts. */
+.env-interior {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background:
+    linear-gradient(180deg, hsla(0 0% 0% / 0.35), hsla(0 0% 0% / 0.12) 60%, transparent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--ease-out);
+}
+.letter.sealed .env-interior {
+  opacity: 0;
+}
+.letter:not(.sealed) .env-interior {
+  animation: interior-show 1100ms var(--ease-out) 220ms both;
+}
+@keyframes interior-show {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  85%  { opacity: 0.6; }
+  100% { opacity: 0; }
 }
 
 /* ── Wax seal ───────────────────────────────────────────── */
@@ -349,12 +388,12 @@ function onKey(e) {
 }
 .letter:not(.sealed) .wax {
   pointer-events: none;
-  animation: wax-crack 500ms cubic-bezier(0.4, 0, 0.5, 1.3) both;
+  animation: wax-crack 420ms cubic-bezier(0.4, 0, 0.5, 1.4) both;
 }
 @keyframes wax-crack {
   0%   { transform: translateX(-50%) scale(1)    rotate(0deg);   opacity: 1; }
-  20%  { transform: translateX(-50%) scale(1.18) rotate(-5deg);  opacity: 1; }
-  100% { transform: translateX(-50%) scale(1.7)  rotate(32deg) translateY(-38px); opacity: 0; }
+  15%  { transform: translateX(-50%) scale(1.22) rotate(-6deg);  opacity: 1; }
+  100% { transform: translateX(-50%) scale(1.9)  rotate(38deg) translateY(-44px); opacity: 0; }
 }
 .wax::before {
   content: '';

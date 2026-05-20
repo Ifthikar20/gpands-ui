@@ -40,16 +40,23 @@ body {
 }
 
 /* ── Paper utility ─────────────────────────────────────────────
-   Every content card across the app uses this class so the stationery
-   metaphor stays consistent. Composes background color, ruled-paper
-   texture, and a soft paper shadow. */
+   Real paper grain via inline SVG feTurbulence noise — no asset,
+   no bundle hit. Layered with ruled-paper lines and a soft sheen.
+   Multiply blend in light mode darkens the noise into the cream so
+   it reads as fiber; screen blend in dark mode lightens it onto the
+   ink-toned paper. */
 .paper {
   background-color: var(--paper-bg, var(--paper));
   background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
     repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px),
     radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.04), transparent 60%);
+  background-blend-mode: multiply, normal, normal;
   border: 1px solid var(--border-subtle);
   box-shadow: 0 1px 2px var(--paper-shadow), 0 12px 28px hsla(0 0% 0% / 0.05);
+}
+:root[data-theme='dark'] .paper {
+  background-blend-mode: screen, normal, normal;
 }
 .paper.paper-flat {
   box-shadow: none;

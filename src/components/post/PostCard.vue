@@ -335,8 +335,8 @@ function toggleFollow(e) {
 
 /* ── Body ──────────────────────────────────────────────────── */
 .body {
-  color: var(--text-primary);
-  font-size: 15px;
+  color: var(--text-body);
+  font-size: 16px;
   line-height: 1.7;
   white-space: pre-wrap;
 }

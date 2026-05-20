@@ -152,10 +152,10 @@ function postCount(name) {
   margin-top: 6px;
 }
 .desc {
-  color: var(--text-secondary);
-  font-size: 13px;
-  line-height: 1.55;
-  margin-top: 4px;
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 6px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

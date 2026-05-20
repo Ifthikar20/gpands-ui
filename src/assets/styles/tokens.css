@@ -81,8 +81,12 @@
   --dur-slow: 360ms;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Source Serif 4', 'Georgia', serif;
+
+  /* Body-paragraph text color (dark theme default) */
+  --text-body: hsl(35 8% 70%);
+  --text-body-line-height: 1.7;
 }
 
 :root[data-theme='light'] {
@@ -126,4 +130,9 @@
 
   --bg-accent-1: hsla(16 95% 50% / 0.05);
   --bg-accent-2: hsla(265 70% 55% / 0.04);
+
+  /* Body-paragraph text color in light theme. Sourced from the
+     LandingPage.vue .hero-p spec — #6e6a65 expressed in hsl so the
+     policy linter (no raw hex outside this file) is satisfied. */
+  --text-body: hsl(34 4% 41%);
 }

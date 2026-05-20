@@ -72,6 +72,8 @@ function go(name) {
   overflow-x: hidden;
   padding: var(--space-4) var(--space-4) var(--space-6);
   z-index: 10;
+  color: var(--text-body);
+  line-height: 1.7;
 }
 
 .card {
@@ -87,7 +89,11 @@ function go(name) {
   gap: 8px;
   align-items: flex-start;
 }
-.member-count { font-size: 12px; color: var(--text-muted); }
+.member-count {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.7;
+}
 .follow {
   margin-top: 4px;
   padding: 7px 18px;
@@ -107,11 +113,11 @@ function go(name) {
 
 .trend-head {
   padding: var(--space-3) var(--space-4) var(--space-2);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-body);
+  line-height: 1.7;
+  letter-spacing: -0.005em;
 }
 .trend-list { padding: 0 var(--space-2) var(--space-2); }
 .trend-row {
@@ -128,18 +134,19 @@ function go(name) {
 .trend-row:hover { background: var(--bg-hover); }
 .rank {
   font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--text-muted);
-  width: 18px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-body);
+  width: 20px;
   flex-shrink: 0;
 }
 .trend-sub {
   margin-left: auto;
-  font-size: 11px;
-  color: var(--text-muted);
-  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-body);
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
+  line-height: 1.7;
 }
 
 @media (max-width: 1280px) {

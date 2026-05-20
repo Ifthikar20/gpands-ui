@@ -151,11 +151,11 @@ const futures = [
 .hero h1 .story { font-family: var(--font-serif, Georgia, serif); font-style: italic; font-weight: 600; }
 
 .lede {
-  max-width: 560px;
+  max-width: 480px;
   margin: var(--space-4) auto 0;
   font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-secondary);
+  line-height: 1.7;
+  color: var(--text-body);
   position: relative;
 }
 .hero-actions {
@@ -194,12 +194,13 @@ const futures = [
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.7;
-  color: var(--text-primary);
+  color: var(--text-body);
   padding: 0 var(--space-2);
+  max-width: 680px;
 }
-.pitch .positioning { color: var(--text-secondary); }
+.pitch .positioning { color: var(--text-body); }
 
 section h2 {
   font-size: 22px;
@@ -240,9 +241,20 @@ section h2 {
   font-weight: 700;
   margin-bottom: 4px;
 }
-.principles p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+.principles p {
+  color: var(--text-body);
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 480px;
+}
 
-.vision .muted { color: var(--text-muted); margin-bottom: var(--space-4); line-height: 1.6; }
+.vision .muted {
+  color: var(--text-body);
+  margin-bottom: var(--space-4);
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 480px;
+}
 .future-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

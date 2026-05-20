@@ -79,7 +79,7 @@ const tabs = [
   <BaseModal v-model:open="open" title="Send a note" max-width="720px">
     <div class="form">
       <label class="field">
-        <span class="label">Capsule</span>
+        <span class="label">Topic</span>
         <div class="select">
           <select v-model="subreddit">
             <option v-for="c in communities.communities" :key="c.name" :value="c.name">

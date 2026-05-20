@@ -25,9 +25,9 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
         <SvgIcon name="trending" :size="20" />
         <span>Popular</span>
       </router-link>
-      <router-link to="/capsules" class="nav-item" active-class="active" @click="ui.closeSidebar()">
+      <router-link to="/topics" class="nav-item" active-class="active" @click="ui.closeSidebar()">
         <SvgIcon name="grid" :size="20" />
-        <span>All Capsules</span>
+        <span>All Topics</span>
       </router-link>
       <router-link to="/about" class="nav-item" active-class="active" @click="ui.closeSidebar()">
         <SvgIcon name="info" :size="20" />
@@ -46,7 +46,7 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
       </button>
       <Transition name="slide-up">
         <ul v-if="yourOpen" class="comm-list">
-          <li v-if="joined.length === 0" class="empty">Follow a capsule to see it here.</li>
+          <li v-if="joined.length === 0" class="empty">Follow a topic to see it here.</li>
           <li v-for="c in joined" :key="c.name">
             <router-link
               :to="`/c/${c.name}`"
@@ -66,7 +66,7 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
 
     <div class="section">
       <button class="section-header" @click="popularOpen = !popularOpen">
-        <span>Capsules</span>
+        <span>Topics</span>
         <SvgIcon name="chevronDown" :size="14" :class="{ rot: !popularOpen }" />
       </button>
       <Transition name="slide-up">

@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
   { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
   { path: '/popular', name: 'popular', component: () => import('@/views/PopularView.vue') },
-  { path: '/capsules', name: 'capsules', component: () => import('@/views/TopicsView.vue') },
+  { path: '/topics', name: 'topics', component: () => import('@/views/TopicsView.vue') },
   { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue') },
   {
     path: '/c/:subreddit',
@@ -13,7 +13,7 @@ const routes = [
   },
   // Backwards-compat redirect for any links still using the old prefix.
   { path: '/r/:subreddit', redirect: (to) => `/c/${to.params.subreddit}` },
-  { path: '/topics', redirect: '/capsules' },
+  { path: '/capsules', redirect: '/topics' },
   {
     path: '/post/:id',
     name: 'post',

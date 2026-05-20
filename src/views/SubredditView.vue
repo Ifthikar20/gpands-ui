@@ -40,7 +40,7 @@ function toggleFollow() {
           @click="toggleFollow"
         >{{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}</button>
       </p>
-      <p v-else class="meta">This capsule doesn't exist yet.</p>
+      <p v-else class="meta">This topic doesn't exist yet.</p>
       <div class="rule" aria-hidden="true" />
     </header>
 

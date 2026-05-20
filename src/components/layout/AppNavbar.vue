@@ -26,7 +26,7 @@ function closeMobile() { mobileOpen.value = false }
       <nav class="links" :class="{ open: mobileOpen }">
         <router-link to="/" exact-active-class="active" @click="closeMobile">Home</router-link>
         <router-link to="/popular" active-class="active" @click="closeMobile">Popular</router-link>
-        <router-link to="/capsules" active-class="active" @click="closeMobile">Capsules</router-link>
+        <router-link to="/topics" active-class="active" @click="closeMobile">Topics</router-link>
         <router-link to="/about" active-class="active" @click="closeMobile">About</router-link>
       </nav>
 

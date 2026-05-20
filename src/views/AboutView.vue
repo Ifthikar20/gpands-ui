@@ -48,7 +48,7 @@ const futures = [
         <button class="btn primary" @click="ui.openCreatePost()">
           <SvgIcon name="quote" :size="16" /> Send a note
         </button>
-        <router-link to="/capsules" class="btn ghost">Browse capsules</router-link>
+        <router-link to="/topics" class="btn ghost">Browse topics</router-link>
       </div>
     </header>
 

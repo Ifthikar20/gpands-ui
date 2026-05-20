@@ -25,7 +25,7 @@ const theme = useThemeStore()
       <nav class="links">
         <router-link to="/">Home</router-link>
         <span class="sep" aria-hidden="true">·</span>
-        <router-link to="/capsules">Capsules</router-link>
+        <router-link to="/topics">Topics</router-link>
         <span class="sep" aria-hidden="true">·</span>
         <router-link to="/about">About</router-link>
         <span class="sep" aria-hidden="true">·</span>

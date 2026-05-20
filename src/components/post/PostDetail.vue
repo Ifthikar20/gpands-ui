@@ -19,6 +19,7 @@ const paragraphs = computed(() =>
   (props.post.body || '').split('\n\n').filter(Boolean),
 )
 const paperClass = computed(() => `paper-${props.post.paperStyle || 'cream'}`)
+const textureClass = computed(() => `texture-${props.post.paperTexture || 'smooth'}`)
 
 const newComment = ref('')
 
@@ -35,7 +36,7 @@ function submitComment() {
 </script>
 
 <template>
-  <article :class="['letter-detail', paperClass, { named: !isAnonymous }]">
+  <article :class="['letter-detail', paperClass, textureClass, { named: !isAnonymous }]">
     <p class="dear">
       <span class="dear-prefix">Dear&hellip;</span>
       <span class="dear-name">{{ post.subreddit }}</span>
@@ -103,11 +104,7 @@ function submitComment() {
   margin: 0 auto;
   padding: var(--space-8) var(--space-6) var(--space-6);
   background-color: var(--paper-bg, var(--paper));
-  background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
-    repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px),
-    radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.03), transparent 60%);
-  background-blend-mode: multiply, normal, normal;
+  /* background-image + blend-mode supplied by the texture-* class. */
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   box-shadow: 0 1px 2px var(--paper-shadow), 0 12px 28px hsla(0 0% 0% / 0.05);
@@ -115,9 +112,6 @@ function submitComment() {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-}
-:root[data-theme='dark'] .letter-detail {
-  background-blend-mode: screen, normal, normal;
 }
 
 .dear {

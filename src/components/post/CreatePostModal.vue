@@ -20,6 +20,7 @@ const image = ref('')
 const subreddit = ref('love')
 const anonymous = ref(false)
 const paperStyle = ref('cream')
+const paperTexture = ref('smooth')
 
 const paperStyles = [
   { id: 'cream', name: 'Cream' },
@@ -29,6 +30,13 @@ const paperStyles = [
   { id: 'rose', name: 'Rose' },
   { id: 'sage', name: 'Sage' },
   { id: 'slate', name: 'Slate' },
+]
+const paperTextures = [
+  { id: 'smooth', name: 'Smooth' },
+  { id: 'lined', name: 'Lined' },
+  { id: 'grid', name: 'Grid' },
+  { id: 'parchment', name: 'Parchment' },
+  { id: 'cardstock', name: 'Cardstock' },
 ]
 
 const open = computed({
@@ -47,6 +55,7 @@ function reset() {
   subreddit.value = 'love'
   anonymous.value = false
   paperStyle.value = 'cream'
+  paperTexture.value = 'smooth'
 }
 
 watch(open, (v) => {
@@ -63,6 +72,7 @@ function submit() {
     type: tab.value,
     anonymous: anonymous.value,
     paperStyle: paperStyle.value,
+    paperTexture: paperTexture.value,
   })
   ui.closeCreatePost()
   router.push({ name: 'post', params: { id } })
@@ -133,6 +143,24 @@ const tabs = [
             @click="paperStyle = p.id"
           >
             <span class="swatch-name">{{ p.name }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label">Texture</span>
+        <div class="paper-picker">
+          <button
+            v-for="t in paperTextures"
+            :key="t.id"
+            type="button"
+            :class="['swatch', `paper-${paperStyle}`, `texture-${t.id}`, { selected: paperTexture === t.id }]"
+            :title="t.name"
+            :aria-label="`Texture: ${t.name}`"
+            :aria-pressed="paperTexture === t.id"
+            @click="paperTexture = t.id"
+          >
+            <span class="swatch-name">{{ t.name }}</span>
           </button>
         </div>
       </div>
@@ -252,9 +280,8 @@ const tabs = [
   height: 64px;
   border-radius: var(--radius-md);
   background-color: var(--paper-bg, var(--paper));
-  background-image:
-    repeating-linear-gradient(transparent 0, transparent 9px, var(--paper-line) 10px),
-    radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.05), transparent 60%);
+  /* background-image driven by .texture-* class so the preview shows
+     the actual fiber/lines/grid the user is about to apply. */
   border: 1px solid var(--border-strong);
   cursor: pointer;
   position: relative;

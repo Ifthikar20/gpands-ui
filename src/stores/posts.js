@@ -133,6 +133,7 @@ export const usePostsStore = defineStore('posts', {
         userVote: 1,
         anonymous: !!payload.anonymous,
         paperStyle: payload.paperStyle || 'cream',
+        paperTexture: payload.paperTexture || 'smooth',
         comments: [],
       }
       this.posts.unshift(post)

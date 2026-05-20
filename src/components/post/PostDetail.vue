@@ -36,37 +36,37 @@ function submitComment() {
 </script>
 
 <template>
-  <article :class="['letter-detail', paperClass, textureClass, { named: !isAnonymous }]">
-    <p class="dear">
-      <span class="dear-prefix">Dear&hellip;</span>
-      <span class="dear-name">{{ post.subreddit }}</span>
-    </p>
+  <div class="post-page">
+    <article :class="['letter-detail', paperClass, textureClass, { named: !isAnonymous }]">
+      <p class="dear">
+        <span class="dear-prefix">Dear&hellip;</span>
+        <span class="dear-name">{{ post.subreddit }}</span>
+      </p>
 
-    <h1 class="title">{{ post.title }}</h1>
+      <h1 class="title">{{ post.title }}</h1>
 
-    <div v-if="post.image && post.type === 'image'" class="postcard">
-      <img :src="post.image" :alt="post.title" />
-    </div>
+      <div v-if="post.image && post.type === 'image'" class="postcard">
+        <img :src="post.image" :alt="post.title" />
+      </div>
 
-    <div v-if="paragraphs.length" class="body">
-      <p v-for="(para, i) in paragraphs" :key="i">{{ para }}</p>
-    </div>
+      <div v-if="paragraphs.length" class="body">
+        <p v-for="(para, i) in paragraphs" :key="i">{{ para }}</p>
+      </div>
 
-    <p class="from">
-      <span class="from-prefix">From&hellip;</span>
-      <UserAvatar
-        v-if="!isAnonymous"
-        :username="post.author"
-        :size="22"
-        class="from-avatar"
-      />
-      <span class="from-name">{{ formattedAuthor }}</span>
-    </p>
-    <p class="time">{{ time }}</p>
+      <p class="from">
+        <span class="from-prefix">From&hellip;</span>
+        <UserAvatar
+          v-if="!isAnonymous"
+          :username="post.author"
+          :size="22"
+          class="from-avatar"
+        />
+        <span class="from-name">{{ formattedAuthor }}</span>
+      </p>
+      <p class="time">{{ time }}</p>
+    </article>
 
-    <div class="rule" aria-hidden="true" />
-
-    <div class="actions">
+    <section class="engage">
       <button
         class="resonate"
         :class="{ active: post.userVote === 1 }"
@@ -75,33 +75,40 @@ function submitComment() {
         <SvgIcon name="heart" :size="14" />
         <span>{{ post.userVote === 1 ? 'Resonated' : 'Resonate' }} &middot; {{ formatCount(post.score) }}</span>
       </button>
-    </div>
 
-    <div class="write-back">
-      <label class="wb-label" for="wb-input">Write back</label>
-      <textarea
-        id="wb-input"
-        v-model="newComment"
-        rows="4"
-        placeholder="A few lines back to the writer&hellip;"
-        class="wb-input"
-      />
-      <div class="wb-actions">
-        <button
-          class="send-reply"
-          :disabled="!newComment.trim()"
-          @click="submitComment"
-        >Send</button>
+      <div class="write-back">
+        <label class="wb-label" for="wb-input">Write back</label>
+        <textarea
+          id="wb-input"
+          v-model="newComment"
+          rows="4"
+          placeholder="A few lines back to the writer&hellip;"
+          class="wb-input"
+        />
+        <div class="wb-actions">
+          <button
+            class="send-reply"
+            :disabled="!newComment.trim()"
+            @click="submitComment"
+          >Send</button>
+        </div>
       </div>
-    </div>
-  </article>
+    </section>
+  </div>
 </template>
 
 <style scoped>
+.post-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
 .letter-detail {
   position: relative;
   max-width: 720px;
   margin: 0 auto;
+  width: 100%;
   padding: var(--space-8) var(--space-6) var(--space-6);
   background-color: var(--paper-bg, var(--paper));
   /* background-image + blend-mode supplied by the texture-* class. */
@@ -205,19 +212,22 @@ function submitComment() {
   color: var(--text-muted);
 }
 
-.rule {
-  height: 1px;
-  margin: var(--space-4) auto;
-  width: 80px;
-  background: var(--paper-line);
+/* ── Engagement section (separate from the letter card) ──── */
+.engage {
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
 }
 
-.actions { display: flex; justify-content: center; }
 .resonate {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
+  padding: 9px 20px;
   background: transparent;
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-pill);
@@ -241,8 +251,7 @@ function submitComment() {
 }
 
 .write-back {
-  max-width: 560px;
-  margin: var(--space-5) auto 0;
+  width: 100%;
   text-align: left;
   display: flex;
   flex-direction: column;

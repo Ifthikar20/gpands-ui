@@ -4,9 +4,15 @@ import { emit, Events } from '@/lib/eventBus.js'
 
 const STORAGE_KEY = 'gpands.joined.v1'
 
+// Validate the persisted joined-set: must be an array of short ascii
+// strings; anything else is dropped.
 function loadJoined() {
   try {
-    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    if (!Array.isArray(parsed)) return new Set()
+    return new Set(
+      parsed.filter((s) => typeof s === 'string' && /^[a-z]{1,32}$/.test(s)),
+    )
   } catch {
     return new Set()
   }
@@ -27,6 +33,9 @@ export const useCommunitiesStore = defineStore('communities', {
   },
   actions: {
     toggleJoin(name) {
+      // Only accept known community names — protects against
+      // calling toggleJoin('<script>...') from devtools, etc.
+      if (!this.getCommunity(name)) return
       const wasJoined = this.joined.has(name)
       if (wasJoined) this.joined.delete(name)
       else this.joined.add(name)

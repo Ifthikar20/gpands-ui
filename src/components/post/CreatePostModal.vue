@@ -6,6 +6,7 @@ import SvgIcon from '@/components/icons/SvgIcon.vue'
 import { useUiStore } from '@/stores/ui.js'
 import { usePostsStore } from '@/stores/posts.js'
 import { useCommunitiesStore } from '@/stores/communities.js'
+import { sanitizeUrl } from '@/lib/sanitize.js'
 
 const ui = useUiStore()
 const posts = usePostsStore()
@@ -45,6 +46,7 @@ const open = computed({
 })
 
 const canSubmit = computed(() => title.value.trim().length > 0 && subreddit.value)
+const safeImage = computed(() => sanitizeUrl(image.value))
 
 function reset() {
   tab.value = 'text'
@@ -177,9 +179,10 @@ const tabs = [
       <label v-if="tab === 'image'" class="field">
         <span class="label">Image URL</span>
         <input v-model="image" type="url" placeholder="https://..." class="input" />
-        <div v-if="image" class="preview">
-          <img :src="image" alt="preview" />
+        <div v-if="safeImage" class="preview">
+          <img :src="safeImage" alt="preview" />
         </div>
+        <span v-else-if="image" class="hint warn">Image URL must be http:// or https://</span>
       </label>
 
       <label v-if="tab === 'link'" class="field">
@@ -215,6 +218,7 @@ const tabs = [
   box-shadow: 0 0 0 3px hsla(220 90% 60% / 0.18);
 }
 .hint { font-size: 11px; color: var(--text-muted); text-align: right; }
+.hint.warn { color: var(--accent-orange); text-align: left; }
 
 .select {
   display: flex;

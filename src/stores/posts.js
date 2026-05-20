@@ -1,12 +1,36 @@
 import { defineStore } from 'pinia'
 import { posts as seed } from '@/data/mock-data.js'
 import { emit, Events } from '@/lib/eventBus.js'
+import {
+  sanitizeTitle,
+  sanitizeText,
+  sanitizeUrl,
+  sanitizeSlug,
+  sanitizePaperStyle,
+  sanitizePaperTexture,
+  sanitizeDirection,
+} from '@/lib/sanitize.js'
 
 const STORAGE_KEY = 'gpands.votes.v1'
 
+// Validate vote entries from localStorage — reject anything that
+// doesn't shape-match { direction: -1|0|1, delta: finite number }.
 function loadVotes() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+    const raw = localStorage.getItem(STORAGE_KEY) || '{}'
+    const parsed = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {}
+    const clean = {}
+    for (const [key, val] of Object.entries(parsed)) {
+      if (typeof key !== 'string' || key.length > 64) continue
+      if (!/^[pc]:[\w-]{1,40}$/.test(key)) continue
+      if (!val || typeof val !== 'object') continue
+      const dir = sanitizeDirection(val.direction)
+      const delta = Number(val.delta)
+      if (!Number.isFinite(delta) || Math.abs(delta) > 1000) continue
+      clean[key] = { direction: dir, delta }
+    }
+    return clean
   } catch {
     return {}
   }
@@ -16,7 +40,7 @@ function saveVotes(state) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   } catch {
-    /* ignore */
+    /* ignore — quota or disabled storage */
   }
 }
 
@@ -74,7 +98,6 @@ export const usePostsStore = defineStore('posts', {
           return list.sort((a, b) => b.commentCount - a.commentCount)
         case 'hot':
         default:
-          // Naive "hot": score weighted by recency.
           return list.sort((a, b) => {
             const score = (p) => p.score / Math.pow((Date.now() / 1000 - p.createdAt) / 3600 + 2, 1.5)
             return score(b) - score(a)
@@ -84,8 +107,9 @@ export const usePostsStore = defineStore('posts', {
   },
   actions: {
     _applyVote(target, key, direction) {
-      const prev = target.userVote || 0
-      const next = prev === direction ? 0 : direction
+      const dir = sanitizeDirection(direction)
+      const prev = sanitizeDirection(target.userVote || 0)
+      const next = prev === dir ? 0 : dir
       const delta = next - prev
       target.score += delta
       target.userVote = next
@@ -118,22 +142,34 @@ export const usePostsStore = defineStore('posts', {
       })
     },
     addPost(payload) {
+      // Defense in depth — every user-supplied field is normalised
+      // and clamped before it touches state. Vue templates already
+      // HTML-escape via mustaches; this protects against tampered
+      // payloads (anything calling addPost from the console, etc.).
+      const title = sanitizeTitle(payload?.title)
+      if (!title) return null
+      const subreddit = sanitizeSlug(payload?.subreddit)
+      if (!subreddit) return null
+      const body = sanitizeText(payload?.body)
+      const image = sanitizeUrl(payload?.image)
+      const type = ['text', 'image', 'link'].includes(payload?.type) ? payload.type : 'text'
+
       const id = 'u' + Date.now()
       const post = {
         id,
-        title: payload.title,
-        author: payload.anonymous ? 'anonymous' : 'maya_w',
-        subreddit: payload.subreddit,
-        body: payload.body || '',
+        title,
+        author: payload?.anonymous ? 'anonymous' : 'maya_w',
+        subreddit,
+        body,
         score: 1,
         createdAt: Math.floor(Date.now() / 1000),
         commentCount: 0,
-        type: payload.type || 'text',
-        image: payload.image || null,
+        type,
+        image: type === 'image' ? image : null,
         userVote: 1,
-        anonymous: !!payload.anonymous,
-        paperStyle: payload.paperStyle || 'cream',
-        paperTexture: payload.paperTexture || 'smooth',
+        anonymous: !!payload?.anonymous,
+        paperStyle: sanitizePaperStyle(payload?.paperStyle),
+        paperTexture: sanitizePaperTexture(payload?.paperTexture),
         comments: [],
       }
       this.posts.unshift(post)
@@ -148,10 +184,12 @@ export const usePostsStore = defineStore('posts', {
     addComment(postId, body, parentId = null) {
       const post = this.getPostById(postId)
       if (!post) return
+      const cleanBody = sanitizeText(body, 4000).trim()
+      if (!cleanBody) return
       const comment = {
         id: 'uc' + Date.now(),
         author: 'maya_w',
-        body,
+        body: cleanBody,
         score: 1,
         createdAt: Math.floor(Date.now() / 1000),
         children: [],
@@ -166,7 +204,7 @@ export const usePostsStore = defineStore('posts', {
       post.commentCount += 1
       emit(Events.CommentAdded, {
         postId, commentId: comment.id, parentId,
-        snippet: body.slice(0, 80),
+        snippet: cleanBody.slice(0, 80),
         postTitle: post.title, subreddit: post.subreddit,
       })
     },

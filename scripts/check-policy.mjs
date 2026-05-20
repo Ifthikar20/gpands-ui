@@ -61,6 +61,14 @@ const VHTML_RE = /\bv-html\s*=/
 
 const TODO_RE = /\b(TODO|FIXME|XXX|HACK)\b/
 
+// Block eval() and `new Function(` — common XSS / RCE primitives.
+// Match `eval(` and `new Function(` but not `function foo()` or variables
+// named `evaluation`.
+const EVAL_RE = /\b(?:eval\s*\(|new\s+Function\s*\()/
+
+// Block dangerouslySetInnerHTML (React-style) just in case it ever creeps in.
+const DANGEROUS_HTML_RE = /dangerouslySetInnerHTML/
+
 const checks = [
   {
     id: 'no-emoji',
@@ -110,6 +118,20 @@ const checks = [
     msg: 'TODO/FIXME markers must be resolved before shipping',
     allowFiles: new Set(['scripts/check-policy.mjs']),
     appliesTo: (rel) => /\.(vue|js|css|html|sh|mjs)$/.test(rel),
+  },
+  {
+    id: 'no-eval',
+    re: EVAL_RE,
+    msg: 'eval() and new Function() are forbidden — code execution risk',
+    allowFiles: new Set(['scripts/check-policy.mjs']),
+    appliesTo: (rel) => /\.(vue|js|mjs)$/.test(rel),
+  },
+  {
+    id: 'no-dangerous-html',
+    re: DANGEROUS_HTML_RE,
+    msg: 'dangerouslySetInnerHTML is forbidden — use trusted v-html in SvgIcon only',
+    allowFiles: new Set(['scripts/check-policy.mjs']),
+    appliesTo: (rel) => /\.(vue|js|mjs)$/.test(rel),
   },
 ]
 

@@ -2,30 +2,25 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCommunitiesStore } from '@/stores/communities.js'
-import { usePostsStore } from '@/stores/posts.js'
 import { formatCount } from '@/composables/useVote.js'
-import SvgIcon from '@/components/icons/SvgIcon.vue'
 import CapsuleChip from '@/components/common/CapsuleChip.vue'
 
 const route = useRoute()
 const router = useRouter()
 const communities = useCommunitiesStore()
-const posts = usePostsStore()
 
 const community = computed(() => {
   const name = route.params.subreddit
   return name ? communities.getCommunity(name) : null
 })
 
-const trending = computed(() => {
-  return [...communities.communities]
-    .map((c) => ({
-      ...c,
-      heat: c.online + posts.getPostsBySubreddit(c.name).length * 200,
-    }))
-    .sort((a, b) => b.heat - a.heat)
-    .slice(0, 8)
-})
+const RECENTLY_PUBLISHED = ['funny', 'career', 'travel', 'animals', 'growth', 'love']
+
+const recentlyPublished = computed(() =>
+  RECENTLY_PUBLISHED
+    .map((name) => communities.getCommunity(name))
+    .filter(Boolean),
+)
 
 function go(name) {
   router.push(`/c/${name}`)
@@ -47,9 +42,9 @@ function go(name) {
     </section>
 
     <section class="card">
-      <header class="trend-head">Trending capsules</header>
+      <header class="trend-head">Recently published</header>
       <ol class="trend-list">
-        <li v-for="(c, i) in trending" :key="c.name">
+        <li v-for="(c, i) in recentlyPublished" :key="c.name">
           <button class="trend-row" @click="go(c.name)">
             <span class="rank">{{ i + 1 }}</span>
             <CapsuleChip :name="c.name" size="sm" :linkable="false" />

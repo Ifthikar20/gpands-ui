@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { communities as seed } from '@/data/mock-data.js'
+import { emit, Events } from '@/lib/eventBus.js'
 
 const STORAGE_KEY = 'gpands.joined.v1'
 
@@ -26,7 +27,8 @@ export const useCommunitiesStore = defineStore('communities', {
   },
   actions: {
     toggleJoin(name) {
-      if (this.joined.has(name)) this.joined.delete(name)
+      const wasJoined = this.joined.has(name)
+      if (wasJoined) this.joined.delete(name)
       else this.joined.add(name)
       // Force reactivity for Set.
       this.joined = new Set(this.joined)
@@ -35,6 +37,9 @@ export const useCommunitiesStore = defineStore('communities', {
       } catch {
         /* ignore */
       }
+      emit(wasJoined ? Events.CommunityUnfollowed : Events.CommunityFollowed, {
+        subreddit: name,
+      })
     },
   },
 })

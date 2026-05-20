@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { posts as seed } from '@/data/mock-data.js'
+import { emit, Events } from '@/lib/eventBus.js'
 
 const STORAGE_KEY = 'gpands.votes.v1'
 
@@ -100,6 +101,10 @@ export const usePostsStore = defineStore('posts', {
       const post = this.getPostById(postId)
       if (!post) return
       this._applyVote(post, 'p:' + postId, direction)
+      emit(Events.VoteCast, {
+        target: 'post', postId, direction: post.userVote,
+        title: post.title, subreddit: post.subreddit,
+      })
     },
     voteComment(postId, commentId, direction) {
       const post = this.getPostById(postId)
@@ -107,6 +112,10 @@ export const usePostsStore = defineStore('posts', {
       const comment = findComment(post.comments || [], commentId)
       if (!comment) return
       this._applyVote(comment, 'c:' + commentId, direction)
+      emit(Events.VoteCast, {
+        target: 'comment', postId, commentId, direction: comment.userVote,
+        snippet: comment.body.slice(0, 60),
+      })
     },
     addPost(payload) {
       const id = 'u' + Date.now()
@@ -128,6 +137,10 @@ export const usePostsStore = defineStore('posts', {
       this.posts.unshift(post)
       this.votes['p:' + id] = { direction: 1, delta: 0 }
       saveVotes(this.votes)
+      emit(Events.PostCreated, {
+        postId: id, title: post.title, subreddit: post.subreddit,
+        author: post.author, anonymous: post.anonymous,
+      })
       return id
     },
     addComment(postId, body, parentId = null) {
@@ -149,6 +162,11 @@ export const usePostsStore = defineStore('posts', {
         post.comments.unshift(comment)
       }
       post.commentCount += 1
+      emit(Events.CommentAdded, {
+        postId, commentId: comment.id, parentId,
+        snippet: body.slice(0, 80),
+        postTitle: post.title, subreddit: post.subreddit,
+      })
     },
   },
 })

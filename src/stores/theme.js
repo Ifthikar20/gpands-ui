@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { emit, Events } from '@/lib/eventBus.js'
 
 const STORAGE_KEY = 'gpas.theme'
 
@@ -30,9 +31,11 @@ export const useThemeStore = defineStore('theme', {
   },
   actions: {
     setTheme(t) {
+      const previous = this.theme
       this.theme = t
       apply(t)
       try { localStorage.setItem(STORAGE_KEY, t) } catch { /* ignore */ }
+      if (previous !== t) emit(Events.ThemeChanged, { previous, current: t })
     },
     toggle() {
       this.setTheme(this.theme === 'dark' ? 'light' : 'dark')

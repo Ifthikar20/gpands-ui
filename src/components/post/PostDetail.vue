@@ -37,7 +37,7 @@ function submitComment() {
       <div class="meta">
         <router-link :to="`/r/${post.subreddit}`" class="sub">
           <span class="sub-icon" :style="{ background: community?.color || 'var(--accent-blue)' }">
-            {{ community?.icon || '?' }}
+            <SvgIcon :name="community?.icon || 'globe'" :size="12" />
           </span>
           <span class="sub-name">r/{{ post.subreddit }}</span>
         </router-link>
@@ -125,7 +125,7 @@ function submitComment() {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 11px;
+  color: white;
 }
 .muted { color: var(--text-muted); }
 .dot { color: var(--text-muted); }

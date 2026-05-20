@@ -71,7 +71,7 @@ const tabs = [
           <span class="prefix">r/</span>
           <select v-model="subreddit">
             <option v-for="c in communities.communities" :key="c.name" :value="c.name">
-              {{ c.icon }}  {{ c.name }} — {{ c.title }}
+              r/{{ c.name }} — {{ c.title }}
             </option>
           </select>
         </div>

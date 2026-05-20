@@ -166,6 +166,11 @@ cmd_audit() {
   npm audit --omit=dev --audit-level=high || true
 }
 
+cmd_check() {
+  log 'running UI policy checks…'
+  node scripts/check-policy.mjs
+}
+
 cmd_clean() {
   log 'removing build artifacts…'
   rm -rf -- dist .vite "$LOG_DIR"
@@ -196,6 +201,7 @@ Commands:
   build      Production build to ./dist
   preview    Serve ./dist locally
   audit      npm audit at level=high (production deps only)
+  check      Run the UI policy linter (no-emoji, no raw hex, etc.)
   doctor     Print environment diagnostics
   clean      Remove dist/, .vite/, .run-logs/
   help       Show this message
@@ -233,6 +239,7 @@ main() {
     build)   cmd_build ;;
     preview) cmd_preview ;;
     audit)   cmd_audit ;;
+    check)   cmd_check ;;
     doctor)  cmd_doctor ;;
     clean)   cmd_clean ;;
     help|-h|--help) cmd_help ;;

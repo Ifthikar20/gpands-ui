@@ -44,7 +44,9 @@ function postCount(name) {
         class="topic-card"
       >
         <div class="banner" :style="{ background: c.color }">
-          <span class="banner-icon">{{ c.icon }}</span>
+          <span class="banner-icon">
+            <SvgIcon :name="c.icon" :size="36" />
+          </span>
         </div>
         <div class="meta">
           <div class="title-row">
@@ -131,8 +133,8 @@ function postCount(name) {
   position: relative;
 }
 .banner-icon {
-  font-size: 36px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+  color: white;
+  filter: drop-shadow(0 2px 6px hsla(0 0% 0% / 0.25));
 }
 .meta { padding: var(--space-4); display: flex; flex-direction: column; gap: 6px; }
 .title-row {

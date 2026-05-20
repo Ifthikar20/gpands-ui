@@ -13,7 +13,7 @@ export const communities = [
     members: 184_204,
     online: 2_104,
     color: 'linear-gradient(135deg, #ef4444, #ec4899)',
-    icon: '❤️',
+    icon: 'heart',
     rules: [
       'Real stories only — no fiction.',
       'No identifying info about other people without consent.',
@@ -29,7 +29,7 @@ export const communities = [
     members: 92_412,
     online: 821,
     color: 'linear-gradient(135deg, #475569, #94a3b8)',
-    icon: '🕊️',
+    icon: 'candle',
     rules: [
       'Hold this space gently — for yourself and others.',
       'No platitudes. Sit with people in what they’re feeling.',
@@ -44,7 +44,7 @@ export const communities = [
     members: 241_330,
     online: 3_812,
     color: 'linear-gradient(135deg, #2563eb, #06b6d4)',
-    icon: '💼',
+    icon: 'briefcase',
     rules: ['Personal stories, not career advice.', 'No company-bashing with identifying details.'],
   },
   {
@@ -55,7 +55,7 @@ export const communities = [
     members: 68_290,
     online: 412,
     color: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-    icon: '✨',
+    icon: 'star',
     rules: ['Respect traditions different from your own.', 'No proselytizing.'],
   },
   {
@@ -66,7 +66,7 @@ export const communities = [
     members: 312_104,
     online: 5_402,
     color: 'linear-gradient(135deg, #facc15, #f97316)',
-    icon: '😂',
+    icon: 'smile',
     rules: ['Keep it real — not punched up to oblivion.', 'No mean-spirited stories about strangers.'],
   },
   {
@@ -77,7 +77,7 @@ export const communities = [
     members: 127_820,
     online: 1_902,
     color: 'linear-gradient(135deg, #b45309, #f97316)',
-    icon: '⛰️',
+    icon: 'mountain',
     rules: ['You don’t owe anyone a happy ending.', 'Trigger warnings when appropriate.'],
   },
   {
@@ -88,7 +88,7 @@ export const communities = [
     members: 198_402,
     online: 2_804,
     color: 'linear-gradient(135deg, #16a34a, #84cc16)',
-    icon: '🌱',
+    icon: 'sprout',
     rules: ['Specifics over generalities — what actually changed?', 'No self-promotion.'],
   },
   {
@@ -99,7 +99,7 @@ export const communities = [
     members: 156_801,
     online: 2_104,
     color: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
-    icon: '👨‍👩‍👧',
+    icon: 'people',
     rules: ['Protect the privacy of people who didn’t consent to being on the internet.'],
   },
   {
@@ -110,7 +110,7 @@ export const communities = [
     members: 142_512,
     online: 3_122,
     color: 'linear-gradient(135deg, #f472b6, #fb923c)',
-    icon: '🍼',
+    icon: 'baby',
     rules: ['No parenting advice unless asked.', 'Be kind — no one is doing this perfectly.'],
   },
   {
@@ -121,7 +121,7 @@ export const communities = [
     members: 109_882,
     online: 1_414,
     color: 'linear-gradient(135deg, #06b6d4, #14b8a6)',
-    icon: '🤝',
+    icon: 'handshake',
     rules: ['Don’t out friends who didn’t sign up to be in your post.'],
   },
   {
@@ -132,7 +132,7 @@ export const communities = [
     members: 218_044,
     online: 2_220,
     color: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
-    icon: '🗺️',
+    icon: 'map',
     rules: ['Stories, not itineraries.', 'No travel gear ads.'],
   },
   {
@@ -143,7 +143,7 @@ export const communities = [
     members: 87_104,
     online: 904,
     color: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-    icon: '🌻',
+    icon: 'hand',
     rules: ['Pay it forward in the comments if you can.'],
   },
   {
@@ -154,7 +154,7 @@ export const communities = [
     members: 64_900,
     online: 612,
     color: 'linear-gradient(135deg, #a78bfa, #f472b6)',
-    icon: '🎓',
+    icon: 'cap',
     rules: ['Be gentle with your younger self.'],
   },
   {
@@ -165,7 +165,7 @@ export const communities = [
     members: 78_420,
     online: 1_104,
     color: 'linear-gradient(135deg, #10b981, #84cc16)',
-    icon: '💰',
+    icon: 'coin',
     rules: ['No financial advice.', 'No flexing.'],
   },
   {
@@ -176,7 +176,7 @@ export const communities = [
     members: 51_204,
     online: 622,
     color: 'linear-gradient(135deg, #14b8a6, #06b6d4)',
-    icon: '🩹',
+    icon: 'cross',
     rules: ['Not medical advice.', 'Respect privacy of caregivers and providers.'],
   },
   {
@@ -187,7 +187,7 @@ export const communities = [
     members: 132_840,
     online: 1_802,
     color: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-    icon: '🧠',
+    icon: 'brain',
     rules: ['Crisis resources pinned in sidebar.', 'No diagnosing strangers.'],
   },
   {
@@ -198,7 +198,7 @@ export const communities = [
     members: 204_812,
     online: 3_212,
     color: 'linear-gradient(135deg, #fb7185, #fbbf24)',
-    icon: '🐕',
+    icon: 'paw',
     rules: ['Photos welcome. Names encouraged.'],
   },
   {
@@ -209,7 +209,7 @@ export const communities = [
     members: 96_412,
     online: 1_140,
     color: 'linear-gradient(135deg, #f97316, #ef4444)',
-    icon: '🍞',
+    icon: 'bowl',
     rules: ['Recipes welcome but the story is the point.'],
   },
   {
@@ -220,7 +220,7 @@ export const communities = [
     members: 58_022,
     online: 612,
     color: 'linear-gradient(135deg, #84cc16, #facc15)',
-    icon: '🏡',
+    icon: 'house',
     rules: ['Be kind about the places people came from.'],
   },
   {
@@ -231,7 +231,7 @@ export const communities = [
     members: 43_820,
     online: 412,
     color: 'linear-gradient(135deg, #f43f5e, #f97316)',
-    icon: '🔄',
+    icon: 'refresh',
     rules: ['Honesty over neatness — second chances aren’t always tidy.'],
   },
 ]
@@ -352,10 +352,10 @@ export const posts = [
     sub: 'loss', author: 'lin_h',
     title: 'I taught my grandfather to text six months before he died. He used to send me one heart every morning.',
     body:
-      "He was 88. He didn't trust phones his whole life. But after my grandma passed I sat with him one Sunday for three hours teaching him how to send emojis.\n\nFor six months, every single morning at 7am, my phone would buzz: ❤️. Just one. He never sent anything else. He didn't know how, or maybe he didn't need to.\n\nHe passed in October. I still check my phone at 7am.",
+      "He was 88. He didn't trust phones his whole life. But after my grandma passed I sat with him one Sunday for three hours teaching him how to send a text. \"Good morning, kiddo.\" Three words. Same three, every day.\n\nFor six months, every single morning at 7am, my phone would buzz with those three words. He never wrote anything else. He didn't know how, or maybe he didn't need to.\n\nHe passed in October. I still check my phone at 7am.",
     score: 28_002, age: 1 * D + 2 * H, commentCount: 902,
     comments: [
-      c('p4-c1', 'desmond_t', "I'm sitting at my desk crying. Thank you for sharing him with us. ❤️", 3120, 28),
+      c('p4-c1', 'desmond_t', "I'm sitting at my desk crying. Thank you for sharing him with us.", 3120, 28),
       c('p4-c2', 'henry_f', 'My father-in-law learned to FaceTime to see my newborn. We have hours of footage of his forehead. I’ll keep all of it.', 1844, 26),
     ],
   }),
@@ -608,7 +608,7 @@ export const posts = [
     score: 56_220, age: 1 * D + 8 * H, commentCount: 2_822,
     comments: [
       c('p26-c1', 'isla_d', 'Dogs perceive time but not the way we do. They just know who is missing.', 12_104, 30),
-      c('p26-c2', 'paulo_r', 'Give Rosie a treat from us all. ❤️', 5402, 28),
+      c('p26-c2', 'paulo_r', 'Give Rosie a treat from us all.', 5402, 28),
     ],
   }),
   p({

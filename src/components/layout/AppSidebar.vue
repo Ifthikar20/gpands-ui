@@ -54,7 +54,9 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
               active-class="active"
               @click="ui.closeSidebar()"
             >
-              <span class="comm-avatar" :style="{ background: c.color }">{{ c.icon }}</span>
+              <span class="comm-avatar" :style="{ background: c.color }">
+                <SvgIcon :name="c.icon" :size="14" />
+              </span>
               <span class="comm-name">r/{{ c.name }}</span>
             </router-link>
           </li>
@@ -76,7 +78,9 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
               active-class="active"
               @click="ui.closeSidebar()"
             >
-              <span class="comm-avatar" :style="{ background: c.color }">{{ c.icon }}</span>
+              <span class="comm-avatar" :style="{ background: c.color }">
+                <SvgIcon :name="c.icon" :size="14" />
+              </span>
               <span class="comm-name">r/{{ c.name }}</span>
             </router-link>
           </li>
@@ -187,7 +191,7 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 12px;
+  color: white;
 }
 .comm-name {
   font-size: 13px;

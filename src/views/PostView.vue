@@ -21,7 +21,7 @@ function back() {
 <template>
   <div class="post-view">
     <button class="back" @click="back">
-      <SvgIcon name="chevronDown" :size="16" style="transform: rotate(90deg)" />
+      <SvgIcon name="chevronDown" :size="16" class="back-arrow" />
       <span>Back</span>
     </button>
 
@@ -53,6 +53,7 @@ function back() {
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .back:hover { background: var(--bg-hover); color: var(--text-primary); }
+.back-arrow { transform: rotate(90deg); }
 
 .missing {
   background: var(--bg-surface);

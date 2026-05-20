@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useCommunitiesStore } from '@/stores/communities.js'
 import { useUiStore } from '@/stores/ui.js'
 import { formatCount } from '@/composables/useVote.js'
+import SvgIcon from '@/components/icons/SvgIcon.vue'
 
 const route = useRoute()
 const communities = useCommunitiesStore()
@@ -24,7 +25,9 @@ const rulesOpen = ref(true)
     <section v-if="community" class="card community">
       <div class="banner" :style="{ background: community.color }" />
       <div class="community-head">
-        <span class="comm-icon" :style="{ background: community.color }">{{ community.icon }}</span>
+        <span class="comm-icon" :style="{ background: community.color }">
+          <SvgIcon :name="community.icon" :size="28" />
+        </span>
         <div>
           <h3>r/{{ community.name }}</h3>
           <p class="muted">{{ community.title }}</p>
@@ -78,7 +81,9 @@ const rulesOpen = ref(true)
         <li v-for="(c, i) in trending" :key="c.name">
           <router-link :to="`/r/${c.name}`" class="trend-item">
             <span class="rank">{{ i + 1 }}</span>
-            <span class="trend-icon" :style="{ background: c.color }">{{ c.icon }}</span>
+            <span class="trend-icon" :style="{ background: c.color }">
+              <SvgIcon :name="c.icon" :size="14" />
+            </span>
             <div>
               <div class="trend-name">r/{{ c.name }}</div>
               <div class="muted small">{{ formatCount(c.members) }} members</div>
@@ -92,7 +97,7 @@ const rulesOpen = ref(true)
       <router-link to="/about">About</router-link> ·
       <router-link to="/topics">Topics</router-link> ·
       <a>Guidelines</a> · <a>Help</a><br />
-      <span class="muted">© 2026 Good People &amp; Story</span>
+      <span class="muted">Copyright 2026 Good People &amp; Story</span>
     </footer>
   </aside>
 </template>
@@ -132,7 +137,7 @@ const rulesOpen = ref(true)
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 24px;
+  color: white;
   border: 3px solid var(--bg-surface);
   flex-shrink: 0;
 }
@@ -255,7 +260,7 @@ const rulesOpen = ref(true)
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 14px;
+  color: white;
 }
 .trend-name { font-size: 13px; font-weight: 600; }
 .small { font-size: 11px; }

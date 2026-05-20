@@ -6,6 +6,7 @@ import { usePostsStore } from '@/stores/posts.js'
 import { useCommunitiesStore } from '@/stores/communities.js'
 import { useUiStore } from '@/stores/ui.js'
 import { formatCount } from '@/composables/useVote.js'
+import SvgIcon from '@/components/icons/SvgIcon.vue'
 
 const route = useRoute()
 const postsStore = usePostsStore()
@@ -26,7 +27,9 @@ const posts = computed(() => {
     <header v-if="community" class="banner-card">
       <div class="banner" :style="{ background: community.color }" />
       <div class="banner-meta">
-        <span class="banner-icon" :style="{ background: community.color }">{{ community.icon }}</span>
+        <span class="banner-icon" :style="{ background: community.color }">
+          <SvgIcon :name="community.icon" :size="36" />
+        </span>
         <div class="banner-info">
           <h1>r/{{ community.name }}</h1>
           <p class="muted">{{ formatCount(community.members) }} members · <span class="online"><span class="dot" />{{ formatCount(community.online) }} online</span></p>
@@ -42,9 +45,11 @@ const posts = computed(() => {
     </header>
 
     <header v-else class="banner-card unknown">
-      <div class="banner" style="background: linear-gradient(135deg, #444, #222)" />
+      <div class="banner unknown-banner" />
       <div class="banner-meta">
-        <span class="banner-icon" style="background: #333">?</span>
+        <span class="banner-icon unknown-icon">
+          <SvgIcon name="globe" :size="36" />
+        </span>
         <div class="banner-info">
           <h1>r/{{ subreddit }}</h1>
           <p class="muted">This community doesn't exist (yet).</p>
@@ -78,8 +83,15 @@ const posts = computed(() => {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 30px;
+  color: white;
   border: 4px solid var(--bg-surface);
+}
+.unknown-banner {
+  background: linear-gradient(135deg, var(--bg-elevated), var(--bg-hover));
+}
+.unknown-icon {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
 }
 .banner-info { flex: 1; padding-top: 28px; }
 .banner-info h1 { font-size: 22px; font-weight: 800; }

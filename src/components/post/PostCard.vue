@@ -3,18 +3,15 @@ import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import UserAvatar from '@/components/common/UserAvatar.vue'
 import { usePostsStore } from '@/stores/posts.js'
-import { useCommunitiesStore } from '@/stores/communities.js'
 import { useRelativeTime } from '@/composables/useRelativeTime.js'
 
 const props = defineProps({ post: { type: Object, required: true } })
 
 const postsStore = usePostsStore()
-const communities = useCommunitiesStore()
 const router = useRouter()
 
 const time = useRelativeTime(() => props.post.createdAt)
 const isAnonymous = computed(() => props.post.author === 'anonymous')
-const community = computed(() => communities.getCommunity(props.post.subreddit))
 const sealed = ref(true)
 
 const formattedAuthor = computed(() => {
@@ -23,10 +20,6 @@ const formattedAuthor = computed(() => {
 })
 
 const paragraphs = computed(() => (props.post.body || '').split('\n\n').filter(Boolean))
-
-const waxStyle = computed(() => ({
-  background: community.value?.color || 'var(--accent-orange)',
-}))
 
 const paperClass = computed(() => `paper-${props.post.paperStyle || 'cream'}`)
 
@@ -59,15 +52,6 @@ function onKey(e) {
     <template v-if="isAnonymous">
       <div class="env-interior" aria-hidden="true" />
       <div class="env-flap" aria-hidden="true" />
-      <button
-        class="wax"
-        :style="waxStyle"
-        aria-label="Open envelope"
-        @click.stop="sealed = false"
-      >
-        <span class="wax-glow" aria-hidden="true" />
-        <span class="monogram">G&amp;S</span>
-      </button>
     </template>
 
     <!-- "Dear ..." addressing line: capsule as recipient -->
@@ -79,7 +63,7 @@ function onKey(e) {
     <h2 class="title">{{ post.title }}</h2>
 
     <!-- Sealed-state hint (only when anonymous and sealed) -->
-    <p v-if="isAnonymous && sealed" class="seal-hint">Tap the seal to open</p>
+    <p v-if="isAnonymous && sealed" class="seal-hint">Tap to open</p>
 
     <!-- Letter body, image, signature — collapses to 0 when sealed -->
     <div class="reveal" :class="{ open: !isAnonymous || !sealed }">
@@ -145,7 +129,7 @@ function onKey(e) {
   outline: 2px solid var(--accent-blue);
   outline-offset: 3px;
 }
-.letter.sealed { padding-top: 175px; }
+.letter.sealed { padding-top: 165px; }
 
 /* ── Dear addressing ────────────────────────────────────── */
 .dear {
@@ -304,12 +288,12 @@ function onKey(e) {
   background-color: var(--paper-bg, var(--paper));
   background-image:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
-    linear-gradient(180deg, hsla(0 0% 0% / 0.08), transparent 55%),
-    radial-gradient(ellipse at top, hsla(0 0% 100% / 0.14), transparent 70%);
+    linear-gradient(180deg, hsla(0 0% 0% / 0.04), transparent 35%, hsla(0 0% 0% / 0.12) 95%, hsla(0 0% 0% / 0.18) 100%),
+    radial-gradient(ellipse at top, hsla(0 0% 100% / 0.1), transparent 70%);
   background-blend-mode: multiply, normal, normal;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
-  filter: drop-shadow(0 8px 14px hsla(0 0% 0% / 0.22));
+  filter: drop-shadow(0 6px 12px hsla(0 0% 0% / 0.28));
   z-index: 2;
   transform: rotateX(0);
   opacity: 1;
@@ -358,77 +342,10 @@ function onKey(e) {
   100% { opacity: 0; }
 }
 
-/* ── Wax seal ───────────────────────────────────────────── */
-.wax {
-  position: absolute;
-  top: 95px;
-  left: 50%;
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: white;
-  font-family: var(--font-serif, Georgia, serif);
-  font-weight: 700;
-  font-size: 19px;
-  letter-spacing: 0.02em;
-  z-index: 3;
-  cursor: pointer;
-  box-shadow:
-    0 8px 18px hsla(0 0% 0% / 0.35),
-    inset 0 -8px 16px hsla(0 0% 0% / 0.28),
-    inset 0 8px 14px hsla(0 0% 100% / 0.22);
-  opacity: 1;
-  transform: translateX(-50%) scale(1) rotate(0);
-  transition: transform 240ms var(--ease-spring), box-shadow var(--dur-base) var(--ease-out);
-}
-.letter.sealed:hover .wax {
-  transform: translateX(-50%) scale(1.05) rotate(-4deg);
-}
-.letter:not(.sealed) .wax {
-  pointer-events: none;
-  animation: wax-crack 420ms cubic-bezier(0.4, 0, 0.5, 1.4) both;
-}
-@keyframes wax-crack {
-  0%   { transform: translateX(-50%) scale(1)    rotate(0deg);   opacity: 1; }
-  15%  { transform: translateX(-50%) scale(1.22) rotate(-6deg);  opacity: 1; }
-  100% { transform: translateX(-50%) scale(1.9)  rotate(38deg) translateY(-44px); opacity: 0; }
-}
-.wax::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 2px dashed hsla(0 0% 100% / 0.22);
-  pointer-events: none;
-  animation: seal-spin 28s linear infinite;
-}
-.wax-glow {
-  position: absolute;
-  top: 10%;
-  left: 18%;
-  width: 32%;
-  height: 22%;
-  background: var(--wax-shine);
-  border-radius: 50%;
-  filter: blur(2px);
-  pointer-events: none;
-}
-.monogram {
-  position: relative;
-  z-index: 1;
-  text-shadow: 0 1px 1px hsla(0 0% 0% / 0.3);
-}
-@keyframes seal-spin {
-  to { transform: rotate(360deg); }
-}
-
 @media (max-width: 640px) {
   .letter { padding: var(--space-6) var(--space-4) var(--space-5); }
-  .letter.sealed { padding-top: 155px; }
+  .letter.sealed { padding-top: 145px; }
   .env-flap { height: 120px; }
-  .wax { top: 80px; width: 80px; height: 80px; font-size: 17px; }
   .title { font-size: 21px; }
   .body { font-size: 15px; }
 }

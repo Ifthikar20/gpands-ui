@@ -31,13 +31,14 @@ const posts = computed(() => postsStore.sortedPosts(ui.activeSort))
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-5) var(--space-6);
   background:
     radial-gradient(ellipse at top right, hsla(265 70% 60% / 0.18), transparent 60%),
     linear-gradient(135deg, hsla(16 95% 55% / 0.16), transparent 70%),
     var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
 }
 .q {
   color: var(--accent-orange);

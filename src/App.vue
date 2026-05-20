@@ -34,9 +34,9 @@ onBeforeUnmount(() => stopAmbient())
 .layout {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--aside-width);
-  gap: var(--space-4);
-  padding: var(--space-4);
-  max-width: 1440px;
+  gap: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  max-width: var(--layout-max);
   margin: 0 auto;
   align-items: start;
 }
@@ -49,15 +49,17 @@ onBeforeUnmount(() => stopAmbient())
   width: 100%;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1280px) {
   .layout {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    padding: var(--space-4);
   }
 }
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
     padding: var(--space-3);
+    gap: var(--space-4);
   }
 }
 </style>

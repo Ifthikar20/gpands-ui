@@ -85,23 +85,25 @@ const preview = computed(() => {
 <style scoped>
 .post-card {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  padding: var(--space-4) var(--space-5);
   cursor: pointer;
-  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 .post-card:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
   border-color: var(--border-strong);
 }
+.post-card:active { transform: translateY(0); }
 .vote-col {
-  background: hsla(220 14% 8% / 0.4);
+  background: var(--bg-elevated);
   padding: var(--space-2);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: flex-start;
 }

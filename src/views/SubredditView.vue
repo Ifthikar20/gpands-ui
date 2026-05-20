@@ -66,8 +66,9 @@ const posts = computed(() => {
 .banner-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 .banner { height: 96px; }
 .banner-meta {

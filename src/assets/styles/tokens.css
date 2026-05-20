@@ -33,21 +33,22 @@
   --border-subtle: hsla(220 14% 50% / 0.12);
   --border-strong: hsla(220 14% 50% / 0.25);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px hsla(0 0% 0% / 0.4);
-  --shadow-md: 0 4px 12px hsla(0 0% 0% / 0.35), 0 2px 4px hsla(0 0% 0% / 0.2);
-  --shadow-lg: 0 12px 32px hsla(0 0% 0% / 0.5), 0 4px 12px hsla(0 0% 0% / 0.3);
-  --shadow-glow-orange: 0 0 24px hsla(16 100% 55% / 0.35);
+  /* Shadows — Apple-style: softer, lifted */
+  --shadow-sm: 0 1px 2px hsla(0 0% 0% / 0.3);
+  --shadow-md: 0 8px 24px hsla(0 0% 0% / 0.28), 0 1px 3px hsla(0 0% 0% / 0.18);
+  --shadow-lg: 0 24px 56px hsla(0 0% 0% / 0.42), 0 6px 16px hsla(0 0% 0% / 0.24);
+  --shadow-glow-orange: 0 8px 28px hsla(16 100% 55% / 0.38);
 
   /* Backdrop gradients */
   --bg-accent-1: hsla(16 100% 55% / 0.06);
   --bg-accent-2: hsla(265 80% 60% / 0.06);
 
-  /* Radii */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  /* Radii — Apple-touch curves */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-card: 22px;
   --radius-pill: 999px;
 
   /* Spacing */
@@ -60,10 +61,11 @@
   --space-8: 32px;
 
   /* Layout */
-  --navbar-height: 56px;
-  --sidebar-width: 248px;
-  --aside-width: 312px;
-  --content-max: 680px;
+  --navbar-height: 60px;
+  --sidebar-width: 264px;
+  --aside-width: 340px;
+  --content-max: 780px;
+  --layout-max: 1600px;
 
   /* Motion */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -106,10 +108,10 @@
   --border-subtle: hsla(220 15% 30% / 0.1);
   --border-strong: hsla(220 15% 30% / 0.22);
 
-  --shadow-sm: 0 1px 2px hsla(220 20% 20% / 0.08);
-  --shadow-md: 0 4px 12px hsla(220 20% 20% / 0.08), 0 2px 4px hsla(220 20% 20% / 0.04);
-  --shadow-lg: 0 12px 32px hsla(220 20% 20% / 0.12), 0 4px 12px hsla(220 20% 20% / 0.06);
-  --shadow-glow-orange: 0 4px 16px hsla(16 95% 50% / 0.3);
+  --shadow-sm: 0 1px 2px hsla(220 20% 20% / 0.06);
+  --shadow-md: 0 8px 24px hsla(220 20% 20% / 0.07), 0 1px 3px hsla(220 20% 20% / 0.05);
+  --shadow-lg: 0 24px 56px hsla(220 20% 20% / 0.11), 0 6px 16px hsla(220 20% 20% / 0.06);
+  --shadow-glow-orange: 0 8px 28px hsla(16 95% 50% / 0.32);
 
   --bg-accent-1: hsla(16 95% 50% / 0.05);
   --bg-accent-2: hsla(265 70% 55% / 0.04);

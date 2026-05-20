@@ -1,104 +1,106 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCommunitiesStore } from '@/stores/communities.js'
 import { useUiStore } from '@/stores/ui.js'
+import { usePostsStore } from '@/stores/posts.js'
 import { formatCount } from '@/composables/useVote.js'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
 
 const route = useRoute()
+const router = useRouter()
 const communities = useCommunitiesStore()
+const posts = usePostsStore()
 const ui = useUiStore()
-const openCreate = () => ui.openCreatePost()
 
 const community = computed(() => {
   const name = route.params.subreddit
   return name ? communities.getCommunity(name) : null
 })
 
-const trending = computed(() => communities.popularCommunities.slice(0, 5))
-const rulesOpen = ref(true)
+// Ranked "trending" — by online count with a small recency boost from
+// the number of stories actually present in seed data.
+const trending = computed(() => {
+  return [...communities.communities]
+    .map((c) => ({
+      ...c,
+      heat: c.online + posts.getPostsBySubreddit(c.name).length * 200,
+    }))
+    .sort((a, b) => b.heat - a.heat)
+    .slice(0, 8)
+})
+
+function go(name) {
+  router.push(`/r/${name}`)
+}
 </script>
 
 <template>
   <aside class="aside">
-    <section v-if="community" class="card community">
-      <div class="banner" :style="{ background: community.color }" />
+    <!-- Compact community card when viewing a topic feed. -->
+    <section v-if="community" class="card community-card">
       <div class="community-head">
         <span class="comm-icon" :style="{ background: community.color }">
-          <SvgIcon :name="community.icon" :size="28" />
+          <SvgIcon :name="community.icon" :size="22" />
         </span>
-        <div>
+        <div class="community-meta">
           <h3>r/{{ community.name }}</h3>
-          <p class="muted">{{ community.title }}</p>
+          <p class="sub">{{ formatCount(community.members) }} members</p>
         </div>
+        <button
+          class="follow"
+          :class="{ joined: communities.isJoined(community.name) }"
+          @click="communities.toggleJoin(community.name)"
+        >
+          {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
+        </button>
       </div>
       <p class="desc">{{ community.description }}</p>
-      <div class="stats">
-        <div>
-          <div class="stat-num">{{ formatCount(community.members) }}</div>
-          <div class="stat-label">Members</div>
-        </div>
-        <div>
-          <div class="stat-num"><span class="dot" /> {{ formatCount(community.online) }}</div>
-          <div class="stat-label">Online</div>
-        </div>
-      </div>
-      <button
-        class="join"
-        :class="{ joined: communities.isJoined(community.name) }"
-        @click="communities.toggleJoin(community.name)"
-      >
-        {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
-      </button>
-
-      <div class="rules">
-        <button class="rules-head" @click="rulesOpen = !rulesOpen">
-          <span>Posting Guidelines</span>
-          <span class="muted" :class="{ rot: !rulesOpen }">▾</span>
-        </button>
-        <Transition name="slide-up">
-          <ol v-if="rulesOpen">
-            <li v-for="(r, i) in community.rules" :key="i">
-              <span class="rule-num">{{ i + 1 }}</span>
-              <span>{{ r }}</span>
-            </li>
-          </ol>
-        </Transition>
-      </div>
     </section>
 
-    <section v-else class="card welcome">
-      <div class="welcome-banner" />
-      <h3>Welcome to <em>Good People &amp; Story</em></h3>
-      <p>Everyone has a story worth telling. Pick a topic. Write what happened. Be heard.</p>
-      <button class="join" @click="openCreate">Share your story</button>
-    </section>
-
-    <section class="card">
-      <h4 class="card-title">Trending Topics</h4>
-      <ul class="trend-list">
+    <!-- Trending categories — always visible, primary right-rail content. -->
+    <section class="card trending-card">
+      <header class="trend-head">
+        <div>
+          <span class="kicker">Trending now</span>
+          <h3>Categories worth reading</h3>
+        </div>
+        <span class="live-dot" aria-hidden="true" />
+      </header>
+      <ol class="trend-list">
         <li v-for="(c, i) in trending" :key="c.name">
-          <router-link :to="`/r/${c.name}`" class="trend-item">
-            <span class="rank">{{ i + 1 }}</span>
+          <button class="trend-row" @click="go(c.name)">
+            <span class="rank">{{ String(i + 1).padStart(2, '0') }}</span>
             <span class="trend-icon" :style="{ background: c.color }">
-              <SvgIcon :name="c.icon" :size="14" />
+              <SvgIcon :name="c.icon" :size="16" />
             </span>
-            <div>
-              <div class="trend-name">r/{{ c.name }}</div>
-              <div class="muted small">{{ formatCount(c.members) }} members</div>
-            </div>
-          </router-link>
+            <span class="trend-text">
+              <span class="trend-name">r/{{ c.name }}</span>
+              <span class="trend-sub">
+                <span class="online"><span class="dot" />{{ formatCount(c.online) }} online</span>
+                <span class="muted">{{ formatCount(c.members) }} members</span>
+              </span>
+            </span>
+            <button
+              v-if="!communities.isJoined(c.name)"
+              class="follow-mini"
+              @click.stop="communities.toggleJoin(c.name)"
+            >Follow</button>
+            <span v-else class="followed-mini">Following</span>
+          </button>
         </li>
-      </ul>
+      </ol>
     </section>
 
-    <footer class="legal">
-      <router-link to="/about">About</router-link> ·
-      <router-link to="/topics">Topics</router-link> ·
-      <a>Guidelines</a> · <a>Help</a><br />
-      <span class="muted">Copyright 2026 Good People &amp; Story</span>
-    </footer>
+    <!-- Small invitation card -->
+    <section class="card prompt-card">
+      <h4>Have a story?</h4>
+      <p>The version you tell to strangers might be the truest one.</p>
+      <button class="share-cta" @click="ui.openCreatePost()">
+        <SvgIcon name="quote" :size="14" />
+        Share a story
+      </button>
+    </section>
   </aside>
 </template>
 
@@ -106,7 +108,7 @@ const rulesOpen = ref(true)
 .aside {
   width: var(--aside-width);
   position: sticky;
-  top: calc(var(--navbar-height) + var(--space-4));
+  top: calc(var(--navbar-height) + var(--space-5));
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -115,166 +117,217 @@ const rulesOpen = ref(true)
   overflow-y: auto;
   padding-right: 4px;
 }
+.aside::-webkit-scrollbar { width: 6px; }
+
 .card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-card);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
-.community .banner {
-  height: 56px;
-}
+
+/* ── Community card (compact) ───────────────────────────────────── */
+.community-card { padding: var(--space-4); }
 .community-head {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4) 0;
-  margin-top: -22px;
 }
 .comm-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
   display: grid;
   place-items: center;
   color: white;
-  border: 3px solid var(--bg-surface);
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
-.community-head h3 {
-  font-size: 16px;
+.community-meta { flex: 1; min-width: 0; }
+.community-meta h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.community-meta .sub { font-size: 12px; color: var(--text-muted); }
+.follow {
+  padding: 6px 14px;
+  background: var(--accent-orange);
+  color: white;
   font-weight: 700;
+  font-size: 12px;
+  border-radius: var(--radius-pill);
+  transition: filter var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
-.muted { color: var(--text-muted); font-size: 12px; }
+.follow:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.follow.joined {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
 .desc {
-  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-3);
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.55;
 }
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-  padding: 0 var(--space-4);
-}
-.stat-num {
-  font-size: 16px;
-  font-weight: 700;
-  display: inline-flex;
+
+/* ── Trending card ──────────────────────────────────────────────── */
+.trend-head {
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-4) var(--space-3);
 }
-.stat-num .dot {
+.kicker {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-orange);
+  font-weight: 700;
+}
+.trend-head h3 {
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.live-dot {
   width: 8px;
   height: 8px;
-  background: var(--success);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--success);
+  background: var(--success);
+  box-shadow: 0 0 0 0 hsla(145 65% 45% / 0.55);
+  animation: trend-pulse 1.8s ease-out infinite;
 }
-.stat-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+@keyframes trend-pulse {
+  0% { box-shadow: 0 0 0 0 hsla(145 65% 45% / 0.55); }
+  100% { box-shadow: 0 0 0 12px hsla(145 65% 45% / 0); }
 }
-.join {
-  margin: var(--space-4);
-  padding: 10px 18px;
-  background: var(--accent-orange);
-  color: white;
-  font-weight: 700;
-  border-radius: var(--radius-pill);
-  transition: filter var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
-  width: calc(100% - var(--space-8));
-}
-.join:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.join.joined {
-  background: transparent;
-  border: 1px solid var(--border-strong);
-  color: var(--text-primary);
-}
-.rules {
-  border-top: 1px solid var(--border-subtle);
-  padding: var(--space-3) var(--space-4) var(--space-4);
-}
-.rules-head {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 13px;
-  padding: 4px 0;
-}
-.rules-head .rot { display: inline-block; transform: rotate(-90deg); }
-.rules ol {
+
+.trend-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-top: var(--space-2);
+  padding: 0 var(--space-2) var(--space-2);
 }
-.rules li {
-  display: flex;
-  gap: 10px;
-  padding: 8px 4px;
-  font-size: 13px;
-  border-top: 1px solid var(--border-subtle);
-}
-.rule-num {
-  color: var(--text-muted);
-  font-weight: 700;
-  min-width: 16px;
-}
-.welcome { padding: 0 0 var(--space-4); }
-.welcome-banner {
-  height: 56px;
-  background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
-}
-.welcome h3 { padding: var(--space-4) var(--space-4) var(--space-2); font-size: 16px; }
-.welcome p { padding: 0 var(--space-4); color: var(--text-secondary); font-size: 13px; }
-.welcome .join { margin-top: var(--space-3); }
-
-.card-title {
-  padding: var(--space-3) var(--space-4);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border-subtle);
-}
-.trend-list { padding: var(--space-2); }
-.trend-item {
+.trend-list li { padding: 0; }
+.trend-row {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
+  gap: var(--space-3);
+  padding: 10px 10px;
+  border-radius: var(--radius-md);
+  text-align: left;
   transition: background var(--dur-fast) var(--ease-out);
+  cursor: pointer;
 }
-.trend-item:hover { background: var(--bg-hover); }
-.rank { font-weight: 700; color: var(--text-muted); width: 16px; }
+.trend-row:hover {
+  background: var(--bg-hover);
+}
+.rank {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-muted);
+  width: 18px;
+  flex-shrink: 0;
+}
 .trend-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
   display: grid;
   place-items: center;
   color: white;
+  flex-shrink: 0;
 }
-.trend-name { font-size: 13px; font-weight: 600; }
-.small { font-size: 11px; }
-
-.legal {
+.trend-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.trend-name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.trend-sub {
+  display: flex;
+  gap: 8px;
   font-size: 11px;
-  color: var(--text-secondary);
-  padding: var(--space-2);
-  line-height: 1.7;
+  color: var(--text-muted);
 }
-.legal a { cursor: pointer; }
-.legal a:hover { text-decoration: underline; }
+.online {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--success);
+  font-weight: 600;
+}
+.online .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.muted { color: var(--text-muted); }
+.follow-mini {
+  padding: 4px 10px;
+  background: var(--accent-orange);
+  color: white;
+  font-weight: 700;
+  font-size: 11px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+  transition: filter var(--dur-fast) var(--ease-out);
+}
+.follow-mini:hover { filter: brightness(1.05); }
+.followed-mini {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
 
-@media (max-width: 1180px) {
+/* ── Prompt card ────────────────────────────────────────────────── */
+.prompt-card {
+  padding: var(--space-4);
+  background:
+    radial-gradient(ellipse at top right, hsla(265 70% 60% / 0.12), transparent 60%),
+    linear-gradient(135deg, hsla(16 95% 55% / 0.1), transparent 70%),
+    var(--bg-surface);
+}
+.prompt-card h4 {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 17px;
+}
+.prompt-card p {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.share-cta {
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: linear-gradient(135deg, var(--accent-orange), hsl(16 95% 48%));
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-glow-orange);
+  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+}
+.share-cta:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+@media (max-width: 1280px) {
   .aside { display: none; }
 }
 </style>

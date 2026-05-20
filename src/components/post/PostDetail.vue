@@ -90,16 +90,17 @@ function submitComment() {
 <style scoped>
 .detail {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  padding: var(--space-5) var(--space-6);
+  box-shadow: var(--shadow-sm);
 }
 .vote-col {
-  background: hsla(220 14% 8% / 0.4);
+  background: var(--bg-elevated);
   padding: var(--space-2);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   align-self: flex-start;
 }
 .content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-3); }

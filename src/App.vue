@@ -1,13 +1,7 @@
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import CreatePostModal from '@/components/post/CreatePostModal.vue'
-import LiveActivityFeed from '@/components/common/LiveActivityFeed.vue'
-import { startAmbient, stopAmbient } from '@/lib/ambient.js'
-
-onMounted(() => startAmbient())
-onBeforeUnmount(() => stopAmbient())
 </script>
 
 <template>
@@ -25,7 +19,6 @@ onBeforeUnmount(() => stopAmbient())
     </main>
   </div>
   <CreatePostModal />
-  <LiveActivityFeed />
 </template>
 
 <style scoped>

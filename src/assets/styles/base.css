@@ -8,6 +8,9 @@ body {
     radial-gradient(ellipse at top right, var(--bg-accent-2), transparent 50%);
   background-attachment: fixed;
   min-height: 100vh;
+  /* Navbar is position:fixed; reserve its height so the layout below
+     starts under it instead of hiding behind it. */
+  padding-top: var(--navbar-height);
   transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
 }
 

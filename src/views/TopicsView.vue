@@ -25,11 +25,11 @@ function postCount(name) {
 </script>
 
 <template>
-  <div class="topics">
+  <div class="capsules-view">
     <header class="head">
       <div>
-        <h1>All Capsules</h1>
-        <p class="muted">Pick a capsule to read the stories — or find your own.</p>
+        <h1>All capsules</h1>
+        <p class="muted">Pick a capsule to read the notes — or find your own.</p>
       </div>
       <div class="search">
         <SvgIcon name="search" :size="16" />
@@ -37,46 +37,35 @@ function postCount(name) {
       </div>
     </header>
 
-    <div class="grid">
-      <router-link
-        v-for="c in list"
-        :key="c.name"
-        :to="`/c/${c.name}`"
-        class="topic-card paper"
-      >
-        <div class="banner" :style="{ background: c.color }">
-          <span class="banner-icon">
-            <SvgIcon :name="c.icon" :size="36" />
-          </span>
-        </div>
-        <div class="meta">
-          <div class="title-row">
-            <CapsuleChip :name="c.name" size="sm" :linkable="false" />
-            <button
-              class="follow"
-              :class="{ following: communities.isJoined(c.name) }"
-              @click.prevent="communities.toggleJoin(c.name)"
-            >
-              {{ communities.isJoined(c.name) ? 'Following' : 'Follow' }}
-            </button>
+    <ol class="capsule-list paper">
+      <li v-for="c in list" :key="c.name">
+        <router-link :to="`/c/${c.name}`" class="row">
+          <CapsuleChip :name="c.name" size="md" :linkable="false" />
+          <div class="text">
+            <h3 class="row-title">{{ c.title }}</h3>
+            <p class="row-desc">{{ c.description }}</p>
           </div>
-          <h3 class="topic-title">{{ c.title }}</h3>
-          <p class="desc">{{ c.description }}</p>
           <div class="stats">
-            <span><strong>{{ formatCount(c.members) }}</strong> members</span>
-            <span class="online"><span class="dot" />{{ formatCount(c.online) }} online</span>
-            <span class="muted">{{ postCount(c.name) }} stories</span>
+            <span class="members">{{ formatCount(c.members) }} members</span>
+            <span class="notes">{{ postCount(c.name) }} notes</span>
           </div>
-        </div>
-      </router-link>
-    </div>
+          <button
+            class="follow"
+            :class="{ following: communities.isJoined(c.name) }"
+            @click.prevent="communities.toggleJoin(c.name)"
+          >
+            {{ communities.isJoined(c.name) ? 'Following' : 'Follow' }}
+          </button>
+        </router-link>
+      </li>
+    </ol>
 
     <div v-if="!list.length" class="empty">No capsules match “{{ filter }}”.</div>
   </div>
 </template>
 
 <style scoped>
-.topics { display: flex; flex-direction: column; gap: var(--space-5); }
+.capsules-view { display: flex; flex-direction: column; gap: var(--space-5); }
 .head {
   display: flex;
   align-items: flex-end;
@@ -84,8 +73,17 @@ function postCount(name) {
   gap: var(--space-4);
   flex-wrap: wrap;
 }
-.head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
-.muted { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+.head h1 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.muted {
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 4px;
+}
 
 .search {
   display: flex;
@@ -95,7 +93,7 @@ function postCount(name) {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
-  width: 240px;
+  width: 260px;
   color: var(--text-muted);
 }
 .search input {
@@ -107,82 +105,68 @@ function postCount(name) {
   color: var(--text-primary);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-3);
-}
-.topic-card {
+.capsule-list {
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius-card);
   overflow: hidden;
-  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
-  cursor: pointer;
+  border-radius: var(--radius-card);
 }
-.topic-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-strong);
+.capsule-list li + li .row {
+  border-top: 1px dashed var(--paper-line);
 }
-.banner {
-  height: 80px;
+.row {
   display: grid;
-  place-items: center;
-  position: relative;
-}
-.banner-icon {
-  color: white;
-  filter: drop-shadow(0 2px 6px hsla(0 0% 0% / 0.25));
-}
-.meta { padding: var(--space-4); display: flex; flex-direction: column; gap: 6px; }
-.title-row {
-  display: flex;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
 }
-.topic-title {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  margin-top: 6px;
+.row:hover { background: hsla(0 0% 0% / 0.03); }
+:root[data-theme='dark'] .row:hover { background: hsla(0 0% 100% / 0.03); }
+
+.text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.row-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--text-primary);
 }
-.desc {
-  color: var(--text-body);
+.row-desc {
   font-size: 14px;
   line-height: 1.7;
-  margin-top: 6px;
+  color: var(--text-body);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .stats {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-3);
-  font-size: 12px;
-  color: var(--text-secondary);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--text-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  line-height: 1.7;
 }
-.stats strong { color: var(--text-primary); font-weight: 700; }
-.online { color: var(--success); display: inline-flex; align-items: center; gap: 4px; }
-.online .dot {
-  width: 6px;
-  height: 6px;
-  background: var(--success);
-  border-radius: 50%;
-}
+.notes { color: var(--text-muted); font-size: 12px; }
 
 .follow {
-  padding: 5px 12px;
+  padding: 7px 16px;
   background: transparent;
-  color: var(--text-primary);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-pill);
+  color: var(--text-primary);
   font-weight: 700;
-  font-size: 11px;
+  font-size: 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
 }
 .follow:hover { background: var(--bg-hover); }
 .follow.following {
@@ -194,9 +178,16 @@ function postCount(name) {
 .empty {
   text-align: center;
   padding: var(--space-8);
-  background: var(--bg-surface);
   border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .stats { display: none; }
+  .row-desc { -webkit-line-clamp: 2; }
 }
 </style>

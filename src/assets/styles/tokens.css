@@ -19,10 +19,10 @@
   --glass-strong: hsla(220 14% 14% / 0.85);
   --glass-border: hsla(220 14% 50% / 0.18);
 
-  /* Text */
-  --text-primary: hsl(220 10% 95%);
-  --text-secondary: hsl(220 10% 65%);
-  --text-muted: hsl(220 10% 45%);
+  /* Text — warm paper-ink in dark mode (faded cream) */
+  --text-primary: hsl(40 22% 90%);
+  --text-secondary: hsl(35 14% 72%);
+  --text-muted: hsl(35 10% 55%);
 
   /* Accents */
   --accent-orange: hsl(16 100% 55%);
@@ -80,9 +80,11 @@
   --dur-base: 220ms;
   --dur-slow: 360ms;
 
-  /* Typography */
+  /* Typography — letter-writing fonts */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Source Serif 4', 'Georgia', serif;
+  --font-typewriter: 'Courier Prime', 'Courier New', monospace;
+  --font-script: 'Caveat', 'Brush Script MT', cursive;
 
   /* Body-paragraph text color (dark theme default) */
   --text-body: hsl(35 8% 70%);
@@ -106,9 +108,10 @@
   --glass-strong: hsla(0 0% 100% / 0.88);
   --glass-border: hsla(220 14% 30% / 0.12);
 
-  --text-primary: hsl(220 18% 14%);
-  --text-secondary: hsl(220 10% 38%);
-  --text-muted: hsl(220 8% 52%);
+  /* Text — warm letter-ink tones rather than cool grays. */
+  --text-primary: hsl(25 22% 16%);
+  --text-secondary: hsl(28 12% 32%);
+  --text-muted: hsl(28 8% 50%);
 
   --accent-orange: hsl(16 95% 50%);
   --accent-orange-soft: hsla(16 95% 50% / 0.12);

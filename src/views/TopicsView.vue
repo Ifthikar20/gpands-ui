@@ -58,10 +58,12 @@ const list = computed(() => {
   gap: 6px;
 }
 .head h1 {
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 32px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-script);
+  font-size: 48px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--text-primary);
+  line-height: 1;
 }
 .muted {
   color: var(--text-body);

@@ -66,8 +66,6 @@ const theme = useThemeStore()
   justify-content: center;
   flex-wrap: wrap;
   gap: var(--space-4);
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 13px;
   color: var(--text-muted);
   border-top: 1px dashed var(--paper-line);
   max-width: 720px;
@@ -75,13 +73,20 @@ const theme = useThemeStore()
 .brand {
   display: inline-flex;
   align-items: baseline;
-  gap: 4px;
-  color: var(--text-body);
+  gap: 6px;
+  font-family: var(--font-serif, Georgia, serif);
   font-style: italic;
+  font-size: 16px;
+  color: var(--text-body);
   letter-spacing: -0.005em;
 }
-.amp { color: var(--accent-orange); }
-.story { font-style: italic; }
+.amp {
+  color: var(--accent-orange);
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: 22px;
+  line-height: 0.6;
+}
 
 .links {
   display: inline-flex;
@@ -89,6 +94,10 @@ const theme = useThemeStore()
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 .links a {
   color: var(--text-muted);

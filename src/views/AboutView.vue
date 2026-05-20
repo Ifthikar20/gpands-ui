@@ -145,7 +145,12 @@ const futures = [
   line-height: 1.1;
   position: relative;
 }
-.hero h1 .amp { color: var(--accent-orange); }
+.hero h1 .amp {
+  color: var(--accent-orange);
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 500;
+}
 .hero h1 .story { font-family: var(--font-serif, Georgia, serif); font-style: italic; font-weight: 600; }
 
 .lede {

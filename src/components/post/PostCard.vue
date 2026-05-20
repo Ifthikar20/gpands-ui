@@ -230,29 +230,55 @@ function onKey(e) {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  color: var(--text-body);
-  font-size: 16px;
-  line-height: 1.7;
+  color: var(--text-primary);
+  font-family: var(--font-typewriter);
+  font-size: 15px;
+  line-height: 1.85;
+  letter-spacing: -0.005em;
 }
 
 /* ── Signature line ─────────────────────────────────────── */
 .from {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin: 0 auto;
   margin-top: var(--space-3);
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--text-muted);
-  font-weight: 600;
 }
-.from-prefix { color: var(--text-muted); }
-.from-avatar { box-shadow: 0 1px 3px hsla(0 0% 0% / 0.18); }
+.from-prefix {
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.from-avatar {
+  align-self: center;
+  box-shadow: 0 1px 3px hsla(0 0% 0% / 0.18);
+}
 .from-name {
-  color: var(--text-body);
+  color: var(--text-primary);
+}
+.letter.named .from-name {
+  /* Handwritten signature for known senders. */
+  font-family: var(--font-script);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: capitalize;
+  letter-spacing: 0.005em;
+  color: var(--accent-orange);
+  transform: rotate(-2deg);
+  transform-origin: left center;
+}
+.letter:not(.named) .from-name {
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   font-weight: 700;
 }
 

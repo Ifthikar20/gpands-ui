@@ -243,11 +243,6 @@ function tick(ev) {
   line-height: 1.45;
 }
 
-@media (min-width: 1281px) {
-  /* The right rail sits flush at right:0 with width var(--aside-width).
-     Push the live widget left of it so it stays clickable. */
-  .live { right: calc(var(--aside-width) + var(--space-4)); }
-}
 @media (max-width: 640px) {
   .live { bottom: var(--space-3); right: var(--space-3); }
   .panel { width: calc(100vw - 24px); }

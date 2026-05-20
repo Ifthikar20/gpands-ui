@@ -19,6 +19,17 @@ const link = ref('')
 const image = ref('')
 const subreddit = ref('love')
 const anonymous = ref(false)
+const paperStyle = ref('cream')
+
+const paperStyles = [
+  { id: 'cream', name: 'Cream' },
+  { id: 'ivory', name: 'Ivory' },
+  { id: 'linen', name: 'Linen' },
+  { id: 'robin', name: 'Robin' },
+  { id: 'rose', name: 'Rose' },
+  { id: 'sage', name: 'Sage' },
+  { id: 'slate', name: 'Slate' },
+]
 
 const open = computed({
   get: () => ui.createPostModalOpen,
@@ -35,6 +46,7 @@ function reset() {
   image.value = ''
   subreddit.value = 'love'
   anonymous.value = false
+  paperStyle.value = 'cream'
 }
 
 watch(open, (v) => {
@@ -50,6 +62,7 @@ function submit() {
     subreddit: subreddit.value,
     type: tab.value,
     anonymous: anonymous.value,
+    paperStyle: paperStyle.value,
   })
   ui.closeCreatePost()
   router.push({ name: 'post', params: { id } })
@@ -105,6 +118,24 @@ const tabs = [
         <span class="label">Your note</span>
         <textarea v-model="body" rows="7" placeholder="Tell us what happened. Take your time." class="input" />
       </label>
+
+      <div class="field">
+        <span class="label">Paper</span>
+        <div class="paper-picker">
+          <button
+            v-for="p in paperStyles"
+            :key="p.id"
+            type="button"
+            :class="['swatch', `paper-${p.id}`, { selected: paperStyle === p.id }]"
+            :title="p.name"
+            :aria-label="`Paper: ${p.name}`"
+            :aria-pressed="paperStyle === p.id"
+            @click="paperStyle = p.id"
+          >
+            <span class="swatch-name">{{ p.name }}</span>
+          </button>
+        </div>
+      </div>
 
       <label class="toggle">
         <input v-model="anonymous" type="checkbox" />
@@ -210,6 +241,53 @@ const tabs = [
   background: var(--bg-canvas);
 }
 .preview img { max-height: 240px; object-fit: contain; }
+
+.paper-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.swatch {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  background-color: var(--paper-bg, var(--paper));
+  background-image:
+    repeating-linear-gradient(transparent 0, transparent 9px, var(--paper-line) 10px),
+    radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.05), transparent 60%);
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  display: grid;
+  place-items: end center;
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  overflow: hidden;
+}
+.swatch:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-orange);
+}
+.swatch.selected {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 3px var(--accent-orange-soft);
+  transform: translateY(-2px);
+}
+.swatch-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 0;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(transparent, hsla(0 0% 100% / 0.7));
+}
+:root[data-theme='dark'] .swatch-name {
+  color: hsla(0 0% 100% / 0.7);
+  background: linear-gradient(transparent, hsla(0 0% 0% / 0.4));
+}
 
 .toggle {
   display: flex;

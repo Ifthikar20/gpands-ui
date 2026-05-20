@@ -132,6 +132,7 @@ export const usePostsStore = defineStore('posts', {
         image: payload.image || null,
         userVote: 1,
         anonymous: !!payload.anonymous,
+        paperStyle: payload.paperStyle || 'cream',
         comments: [],
       }
       this.posts.unshift(post)

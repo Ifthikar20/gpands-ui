@@ -2,7 +2,6 @@
 import { onMounted, onBeforeUnmount } from 'vue'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
-import CommunitySidebar from '@/components/layout/CommunitySidebar.vue'
 import CreatePostModal from '@/components/post/CreatePostModal.vue'
 import LiveActivityFeed from '@/components/common/LiveActivityFeed.vue'
 import { startAmbient, stopAmbient } from '@/lib/ambient.js'
@@ -24,7 +23,6 @@ onBeforeUnmount(() => stopAmbient())
         </router-view>
       </div>
     </main>
-    <CommunitySidebar />
   </div>
   <CreatePostModal />
   <LiveActivityFeed />
@@ -32,12 +30,10 @@ onBeforeUnmount(() => stopAmbient())
 
 <style scoped>
 .layout {
-  /* Both rails are position: fixed against the viewport. We reserve
-     their lanes here with padding so the main column never overlaps
-     them and never centers between them. */
+  /* Only the left sidebar is fixed; the right rail was removed. */
   padding:
     var(--space-5)
-    calc(var(--aside-width) + var(--space-5))
+    var(--space-5)
     var(--space-6)
     calc(var(--sidebar-width) + var(--space-5));
   width: 100%;
@@ -51,11 +47,6 @@ onBeforeUnmount(() => stopAmbient())
   width: 100%;
 }
 
-@media (max-width: 1280px) {
-  .layout {
-    padding-right: var(--space-5);
-  }
-}
 @media (max-width: 900px) {
   .layout {
     padding: var(--space-4);

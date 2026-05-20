@@ -136,3 +136,23 @@
      policy linter (no raw hex outside this file) is satisfied. */
   --text-body: hsl(34 4% 41%);
 }
+
+/* ── Paper-style variants ──────────────────────────────────────
+   Each variant only overrides --paper-bg. Cards that opt in pick up
+   the new background through the .paper utility (base.css). Default
+   is cream — the same value as --paper. */
+.paper-cream  { --paper-bg: var(--paper); }
+.paper-ivory  { --paper-bg: hsl(48 50% 96%); }
+.paper-linen  { --paper-bg: hsl(34 28% 90%); }
+.paper-robin  { --paper-bg: hsl(190 30% 92%); }
+.paper-rose   { --paper-bg: hsl(355 32% 94%); }
+.paper-sage   { --paper-bg: hsl(135 22% 92%); }
+.paper-slate  { --paper-bg: hsl(220 12% 92%); }
+
+:root[data-theme='dark'] .paper-cream { --paper-bg: var(--paper); }
+:root[data-theme='dark'] .paper-ivory { --paper-bg: hsl(45 12% 13%); }
+:root[data-theme='dark'] .paper-linen { --paper-bg: hsl(30 14% 14%); }
+:root[data-theme='dark'] .paper-robin { --paper-bg: hsl(195 14% 13%); }
+:root[data-theme='dark'] .paper-rose  { --paper-bg: hsl(355 12% 14%); }
+:root[data-theme='dark'] .paper-sage  { --paper-bg: hsl(135 12% 13%); }
+:root[data-theme='dark'] .paper-slate { --paper-bg: hsl(220 10% 14%); }

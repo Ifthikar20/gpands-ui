@@ -37,6 +37,8 @@ const waxStyle = computed(() => ({
   background: community.value?.color || 'var(--accent-orange)',
 }))
 
+const paperClass = computed(() => `paper-${props.post.paperStyle || 'cream'}`)
+
 function onCardClick() {
   if (isAnonymous.value && sealed.value) {
     sealed.value = false
@@ -67,7 +69,7 @@ function toggleFollow(e) {
 
 <template>
   <article
-    :class="['card', isAnonymous ? 'envelope' : 'letter', { sealed: isAnonymous && sealed }]"
+    :class="['card', isAnonymous ? 'envelope' : 'letter', paperClass, { sealed: isAnonymous && sealed }]"
     :tabindex="0"
     role="button"
     :aria-expanded="!isAnonymous || !sealed"
@@ -179,7 +181,7 @@ function toggleFollow(e) {
 
 /* ── Letter (named posts) ─────────────────────────────────── */
 .letter {
-  background: var(--paper);
+  background-color: var(--paper-bg, var(--paper));
   background-image:
     repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px),
     radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.04), transparent 60%);
@@ -189,7 +191,7 @@ function toggleFollow(e) {
 
 /* ── Envelope (anonymous posts) ───────────────────────────── */
 .envelope {
-  background: var(--paper);
+  background-color: var(--paper-bg, var(--paper));
   background-image:
     linear-gradient(135deg, hsla(0 0% 0% / 0.03), transparent 70%),
     radial-gradient(ellipse at bottom right, hsla(0 0% 0% / 0.05), transparent 60%);
@@ -207,7 +209,7 @@ function toggleFollow(e) {
   left: 0;
   right: 0;
   height: 140px;
-  background-color: var(--paper);
+  background-color: var(--paper-bg, var(--paper));
   background-image:
     linear-gradient(180deg, hsla(0 0% 0% / 0.06), transparent 50%),
     radial-gradient(ellipse at top, hsla(0 0% 100% / 0.12), transparent 70%),

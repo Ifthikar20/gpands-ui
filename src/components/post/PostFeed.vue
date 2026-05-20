@@ -1,47 +1,33 @@
 <script setup>
-import { computed } from 'vue'
-import SortTabs from '@/components/common/SortTabs.vue'
 import PostCard from '@/components/post/PostCard.vue'
-import UserAvatar from '@/components/common/UserAvatar.vue'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
 import { useUiStore } from '@/stores/ui.js'
-import { useUserStore } from '@/stores/user.js'
 
-const props = defineProps({
+defineProps({
   posts: { type: Array, required: true },
   showCreatePrompt: { type: Boolean, default: true },
 })
 
 const ui = useUiStore()
-const user = useUserStore()
-
-const sort = computed({
-  get: () => ui.activeSort,
-  set: (v) => ui.setSort(v),
-})
 </script>
 
 <template>
   <div class="feed">
-    <div v-if="showCreatePrompt" class="create-prompt paper">
-      <UserAvatar :username="user.currentUser.username" :size="36" />
-      <button class="create-input" @click="ui.openCreatePost()">Send a note…</button>
-      <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Image note">
-        <SvgIcon name="image" :size="18" />
-      </button>
-      <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Quote note">
-        <SvgIcon name="quote" :size="18" />
-      </button>
-    </div>
+    <button
+      v-if="showCreatePrompt"
+      class="prompt"
+      @click="ui.openCreatePost()"
+    >
+      <SvgIcon name="quote" :size="16" />
+      <span>Send a note&hellip;</span>
+    </button>
 
-    <SortTabs v-model="sort" />
-
-    <TransitionGroup name="list" tag="div" class="post-list">
+    <TransitionGroup name="list" tag="div" class="letters">
       <PostCard v-for="p in posts" :key="p.id" :post="p" />
     </TransitionGroup>
 
     <div v-if="!posts.length" class="empty">
-      <p>Nothing here yet — be the first to post!</p>
+      <p>No notes here yet.</p>
     </div>
   </div>
 </template>
@@ -50,52 +36,41 @@ const sort = computed({
 .feed {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-6);
   width: 100%;
 }
-.create-prompt {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  border-radius: var(--radius-card);
-  padding: var(--space-3) var(--space-4);
-}
-.create-input {
-  flex: 1;
-  text-align: left;
-  background: var(--bg-elevated);
-  color: var(--text-muted);
-  padding: 10px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid transparent;
-  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
-}
-.create-input:hover {
-  border-color: var(--border-strong);
-  background: var(--bg-hover);
-}
-.icon-pill {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  display: grid;
-  place-items: center;
-  color: var(--text-secondary);
-  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
-}
-.icon-pill:hover { background: var(--bg-hover); color: var(--text-primary); }
 
-.post-list {
+.prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: center;
+  padding: 10px 22px;
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-body);
+  font-size: 14px;
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.prompt:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--accent-orange);
+}
+
+.letters {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-8);
   position: relative;
 }
+
 .empty {
   padding: var(--space-8);
-  background: var(--bg-surface);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
   text-align: center;
   color: var(--text-muted);
 }

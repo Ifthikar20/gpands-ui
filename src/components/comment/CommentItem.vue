@@ -47,7 +47,8 @@ function submitReply() {
 
     <div class="body-col">
       <header class="meta">
-        <span class="author">u/{{ comment.author }}</span>
+        <span v-if="comment.author === 'anonymous'" class="author muted">anonymous</span>
+        <router-link v-else :to="`/u/${comment.author}`" class="author">u/{{ comment.author }}</router-link>
         <span class="dot">•</span>
         <span class="muted">{{ time }}</span>
         <button v-if="collapsed" class="expand" @click="collapsed = false">[+] {{ comment.children?.length || 0 }} more</button>

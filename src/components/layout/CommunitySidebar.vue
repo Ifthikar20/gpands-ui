@@ -2,10 +2,13 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCommunitiesStore } from '@/stores/communities.js'
+import { useUiStore } from '@/stores/ui.js'
 import { formatCount } from '@/composables/useVote.js'
 
 const route = useRoute()
 const communities = useCommunitiesStore()
+const ui = useUiStore()
+const openCreate = () => ui.openCreatePost()
 
 const community = computed(() => {
   const name = route.params.subreddit
@@ -43,12 +46,12 @@ const rulesOpen = ref(true)
         :class="{ joined: communities.isJoined(community.name) }"
         @click="communities.toggleJoin(community.name)"
       >
-        {{ communities.isJoined(community.name) ? 'Joined' : 'Join' }}
+        {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
       </button>
 
       <div class="rules">
         <button class="rules-head" @click="rulesOpen = !rulesOpen">
-          <span>Community Rules</span>
+          <span>Posting Guidelines</span>
           <span class="muted" :class="{ rot: !rulesOpen }">▾</span>
         </button>
         <Transition name="slide-up">
@@ -64,13 +67,13 @@ const rulesOpen = ref(true)
 
     <section v-else class="card welcome">
       <div class="welcome-banner" />
-      <h3>Welcome to reddit</h3>
-      <p>Reddit is home to thousands of communities, endless conversation, and authentic human connection.</p>
-      <button class="join" @click="$emit('createPost')">Create a post</button>
+      <h3>Welcome to <em>Good People &amp; Story</em></h3>
+      <p>Everyone has a story worth telling. Pick a topic. Write what happened. Be heard.</p>
+      <button class="join" @click="openCreate">Share your story</button>
     </section>
 
     <section class="card">
-      <h4 class="card-title">Trending Communities</h4>
+      <h4 class="card-title">Trending Topics</h4>
       <ul class="trend-list">
         <li v-for="(c, i) in trending" :key="c.name">
           <router-link :to="`/r/${c.name}`" class="trend-item">
@@ -86,8 +89,10 @@ const rulesOpen = ref(true)
     </section>
 
     <footer class="legal">
-      <a>About</a> · <a>Help</a> · <a>Press</a> · <a>Careers</a><br />
-      <span class="muted">© 2026 UI clone, not affiliated with Reddit.</span>
+      <router-link to="/about">About</router-link> ·
+      <router-link to="/topics">Topics</router-link> ·
+      <a>Guidelines</a> · <a>Help</a><br />
+      <span class="muted">© 2026 Good People &amp; Story</span>
     </footer>
   </aside>
 </template>

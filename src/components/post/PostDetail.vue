@@ -4,12 +4,14 @@ import VoteWidget from '@/components/common/VoteWidget.vue'
 import SvgIcon from '@/components/icons/SvgIcon.vue'
 import { usePostsStore } from '@/stores/posts.js'
 import { useCommunitiesStore } from '@/stores/communities.js'
+import { useUserStore } from '@/stores/user.js'
 import { useRelativeTime } from '@/composables/useRelativeTime.js'
 import { formatCount } from '@/composables/useVote.js'
 
 const props = defineProps({ post: { type: Object, required: true } })
 const postsStore = usePostsStore()
 const communities = useCommunitiesStore()
+const user = useUserStore()
 const time = useRelativeTime(() => props.post.createdAt)
 const community = computed(() => communities.getCommunity(props.post.subreddit))
 
@@ -40,7 +42,8 @@ function submitComment() {
           <span class="sub-name">r/{{ post.subreddit }}</span>
         </router-link>
         <span class="dot">•</span>
-        <span class="muted">Posted by u/{{ post.author }}</span>
+        <span class="muted" v-if="post.author === 'anonymous'">Posted anonymously</span>
+        <router-link v-else :to="`/u/${post.author}`" class="author-link">u/{{ post.author }}</router-link>
         <span class="muted">{{ time }}</span>
       </div>
 
@@ -73,7 +76,7 @@ function submitComment() {
 
       <div class="comment-box">
         <p class="comment-label">
-          Comment as <span class="self">u/curious_dev</span>
+          Comment as <span class="self">u/{{ user.currentUser.username }}</span>
         </p>
         <textarea v-model="newComment" rows="4" placeholder="What are your thoughts?" />
         <div class="comment-actions">
@@ -126,6 +129,8 @@ function submitComment() {
 }
 .muted { color: var(--text-muted); }
 .dot { color: var(--text-muted); }
+.author-link { font-weight: 600; color: var(--text-secondary); }
+.author-link:hover { text-decoration: underline; color: var(--text-primary); }
 
 .title { font-size: 22px; font-weight: 700; line-height: 1.3; }
 .body { font-size: 15px; line-height: 1.6; color: var(--text-primary); white-space: pre-wrap; }

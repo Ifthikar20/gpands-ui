@@ -21,19 +21,27 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
         <SvgIcon name="home" :size="20" />
         <span>Home</span>
       </router-link>
-      <a class="nav-item">
+      <router-link to="/popular" class="nav-item" active-class="active" @click="ui.closeSidebar()">
         <SvgIcon name="trending" :size="20" />
         <span>Popular</span>
-      </a>
-      <a class="nav-item">
-        <SvgIcon name="globe" :size="20" />
-        <span>All</span>
-      </a>
+      </router-link>
+      <router-link to="/topics" class="nav-item" active-class="active" @click="ui.closeSidebar()">
+        <SvgIcon name="grid" :size="20" />
+        <span>All Topics</span>
+      </router-link>
+      <router-link to="/about" class="nav-item" active-class="active" @click="ui.closeSidebar()">
+        <SvgIcon name="info" :size="20" />
+        <span>About</span>
+      </router-link>
+      <router-link to="/u/me" class="nav-item" active-class="active" @click="ui.closeSidebar()">
+        <SvgIcon name="user" :size="20" />
+        <span>My Profile</span>
+      </router-link>
     </nav>
 
     <div class="section">
       <button class="section-header" @click="yourOpen = !yourOpen">
-        <span>Your Communities</span>
+        <span>Following</span>
         <SvgIcon name="chevronDown" :size="14" :class="{ rot: !yourOpen }" />
       </button>
       <Transition name="slide-up">
@@ -56,7 +64,7 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
 
     <div class="section">
       <button class="section-header" @click="popularOpen = !popularOpen">
-        <span>Popular Communities</span>
+        <span>Topics</span>
         <SvgIcon name="chevronDown" :size="14" :class="{ rot: !popularOpen }" />
       </button>
       <Transition name="slide-up">
@@ -77,8 +85,8 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
     </div>
 
     <footer class="foot">
-      <p>UI clone built with Vue 3 + Pinia.</p>
-      <p class="muted">Not affiliated with Reddit Inc.</p>
+      <p class="tag"><strong>Good People &amp; Story</strong></p>
+      <p class="muted">Real human stories, told by the people who lived them.</p>
     </footer>
   </aside>
 

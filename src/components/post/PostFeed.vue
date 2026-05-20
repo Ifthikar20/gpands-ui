@@ -25,12 +25,12 @@ const sort = computed({
   <div class="feed">
     <div v-if="showCreatePrompt" class="create-prompt">
       <UserAvatar :username="user.currentUser.username" :size="36" />
-      <button class="create-input" @click="ui.openCreatePost()">Create a post</button>
-      <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Image post">
+      <button class="create-input" @click="ui.openCreatePost()">Share a story…</button>
+      <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Image story">
         <SvgIcon name="image" :size="18" />
       </button>
-      <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Link post">
-        <SvgIcon name="link" :size="18" />
+      <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Quote story">
+        <SvgIcon name="quote" :size="18" />
       </button>
     </div>
 

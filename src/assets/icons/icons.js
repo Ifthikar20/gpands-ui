@@ -48,4 +48,21 @@ export const icons = {
     '<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
   reddit:
     '<circle cx="12" cy="12" r="10" fill="currentColor"/><circle cx="9" cy="13" r="1.3" fill="#1a1d22"/><circle cx="15" cy="13" r="1.3" fill="#1a1d22"/><path d="M8.5 15.5c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5" stroke="#1a1d22" stroke-width="1.2" stroke-linecap="round" fill="none"/><circle cx="18" cy="8" r="1.3" fill="#1a1d22"/><path d="M18 8l-4 1" stroke="#1a1d22" stroke-width="1" stroke-linecap="round"/>',
+  // Brand mark: open book with heart
+  gps:
+    '<path d="M3 5.5C3 4.7 3.7 4 4.5 4H10c1.1 0 2 .9 2 2v13c0-1.1-.9-2-2-2H3V5.5z" fill="currentColor" opacity="0.9"/><path d="M21 5.5c0-.8-.7-1.5-1.5-1.5H14c-1.1 0-2 .9-2 2v13c0-1.1.9-2 2-2h7V5.5z" fill="currentColor" opacity="0.65"/><path d="M12 10.2c-1-1.6-3.5-1.1-3.5.7 0 1.5 2 2.6 3.5 3.6 1.5-1 3.5-2.1 3.5-3.6 0-1.8-2.5-2.3-3.5-.7z" fill="#fff"/>',
+  sun:
+    '<circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  moon:
+    '<path d="M21 13.5A9 9 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z" fill="currentColor"/>',
+  user:
+    '<circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1-4.5 4.5-7 8-7s7 2.5 8 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  info:
+    '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  bookmark:
+    '<path d="M6 4h12v17l-6-4-6 4V4z" fill="currentColor"/>',
+  quote:
+    '<path d="M7 7c-2 0-3 1.5-3 3.5S5 14 7 14v3c-3 0-5-2.5-5-6.5S4 4 7 4v3zm10 0c-2 0-3 1.5-3 3.5S15 14 17 14v3c-3 0-5-2.5-5-6.5S14 4 17 4v3z" fill="currentColor"/>',
+  grid:
+    '<rect x="3" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/>',
 }

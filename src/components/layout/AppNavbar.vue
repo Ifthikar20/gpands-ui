@@ -5,9 +5,11 @@ import SvgIcon from '@/components/icons/SvgIcon.vue'
 import UserAvatar from '@/components/common/UserAvatar.vue'
 import { useUiStore } from '@/stores/ui.js'
 import { useUserStore } from '@/stores/user.js'
+import { useThemeStore } from '@/stores/theme.js'
 
 const ui = useUiStore()
 const user = useUserStore()
+const theme = useThemeStore()
 const router = useRouter()
 
 const query = ref('')
@@ -28,8 +30,10 @@ function onSearch(e) {
       </button>
 
       <router-link to="/" class="brand" aria-label="Home">
-        <span class="brand-mark"><SvgIcon name="reddit" :size="32" /></span>
-        <span class="brand-text">reddit</span>
+        <span class="brand-mark"><SvgIcon name="gps" :size="28" /></span>
+        <span class="brand-text">
+          <span class="b-good">Good People</span><span class="b-amp"> & </span><span class="b-story">Story</span>
+        </span>
       </router-link>
 
       <form class="search" :class="{ focused }" @submit="onSearch">
@@ -37,29 +41,33 @@ function onSearch(e) {
         <input
           v-model="query"
           type="text"
-          placeholder="Search Reddit"
+          placeholder="Search stories, topics, people"
           @focus="focused = true"
           @blur="focused = false"
         />
       </form>
 
       <div class="nav-actions">
-        <button class="icon-btn" aria-label="Create post" @click="ui.openCreatePost()">
-          <SvgIcon name="plus" :size="20" />
+        <button class="share-btn" @click="ui.openCreatePost()">
+          <SvgIcon name="quote" :size="16" />
+          <span>Share a story</span>
         </button>
-        <button class="icon-btn" aria-label="Chat">
-          <SvgIcon name="chat" :size="20" />
+        <button class="icon-btn theme-toggle" aria-label="Toggle theme" @click="theme.toggle()">
+          <Transition name="fade" mode="out-in">
+            <SvgIcon v-if="theme.isDark" key="sun" name="sun" :size="20" />
+            <SvgIcon v-else key="moon" name="moon" :size="20" />
+          </Transition>
         </button>
         <button class="icon-btn" aria-label="Notifications">
           <SvgIcon name="bell" :size="20" />
           <span class="dot" />
         </button>
 
-        <button class="user-chip" @click="userMenuOpen = !userMenuOpen">
+        <router-link to="/u/me" class="user-chip">
           <UserAvatar :username="user.currentUser.username" :size="28" online />
-          <span class="user-name">{{ user.currentUser.username }}</span>
+          <span class="user-name">{{ user.currentUser.displayName || user.currentUser.username }}</span>
           <SvgIcon name="chevronDown" :size="16" />
-        </button>
+        </router-link>
       </div>
     </div>
   </header>
@@ -106,10 +114,14 @@ function onSearch(e) {
 .brand:hover { background: var(--bg-hover); }
 .brand-mark { color: var(--accent-orange); display: inline-flex; }
 .brand-text {
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
+.b-good { color: var(--text-primary); }
+.b-amp { color: var(--accent-orange); font-weight: 800; }
+.b-story { color: var(--text-primary); font-style: italic; font-family: var(--font-serif, Georgia, serif); }
 
 .search {
   flex: 1;
@@ -144,8 +156,23 @@ function onSearch(e) {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, var(--accent-orange), hsl(16 95% 48%));
+  color: white;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: var(--shadow-glow-orange);
+  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+}
+.share-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.theme-toggle { color: var(--text-primary); }
 .icon-btn {
   position: relative;
   width: 36px;
@@ -192,7 +219,7 @@ function onSearch(e) {
 }
 @media (max-width: 640px) {
   .brand-text { display: none; }
-  .nav-actions .icon-btn:nth-child(2),
-  .nav-actions .icon-btn:nth-child(3) { display: none; }
+  .share-btn span { display: none; }
+  .share-btn { padding: 8px; }
 }
 </style>

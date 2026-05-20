@@ -45,7 +45,10 @@ const preview = computed(() => {
           <span class="sub-name">r/{{ post.subreddit }}</span>
         </router-link>
         <span class="dot">•</span>
-        <span class="muted">Posted by u/{{ post.author }}</span>
+        <span class="muted" v-if="post.author === 'anonymous'">Posted anonymously</span>
+        <router-link v-else :to="`/u/${post.author}`" class="author-link" @click.stop>
+          u/{{ post.author }}
+        </router-link>
         <span class="muted">{{ time }}</span>
       </div>
 
@@ -136,6 +139,11 @@ const preview = computed(() => {
 }
 .muted { color: var(--text-muted); }
 .dot { color: var(--text-muted); }
+.author-link {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.author-link:hover { text-decoration: underline; color: var(--text-primary); }
 
 .title {
   font-size: 17px;

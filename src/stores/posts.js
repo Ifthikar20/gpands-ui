@@ -113,7 +113,7 @@ export const usePostsStore = defineStore('posts', {
       const post = {
         id,
         title: payload.title,
-        author: 'curious_dev',
+        author: payload.anonymous ? 'anonymous' : 'maya_w',
         subreddit: payload.subreddit,
         body: payload.body || '',
         score: 1,
@@ -122,6 +122,7 @@ export const usePostsStore = defineStore('posts', {
         type: payload.type || 'text',
         image: payload.image || null,
         userVote: 1,
+        anonymous: !!payload.anonymous,
         comments: [],
       }
       this.posts.unshift(post)
@@ -134,7 +135,7 @@ export const usePostsStore = defineStore('posts', {
       if (!post) return
       const comment = {
         id: 'uc' + Date.now(),
-        author: 'curious_dev',
+        author: 'maya_w',
         body,
         score: 1,
         createdAt: Math.floor(Date.now() / 1000),

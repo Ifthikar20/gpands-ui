@@ -17,7 +17,8 @@ const title = ref('')
 const body = ref('')
 const link = ref('')
 const image = ref('')
-const subreddit = ref('programming')
+const subreddit = ref('love')
+const anonymous = ref(false)
 
 const open = computed({
   get: () => ui.createPostModalOpen,
@@ -32,7 +33,8 @@ function reset() {
   body.value = ''
   link.value = ''
   image.value = ''
-  subreddit.value = 'programming'
+  subreddit.value = 'love'
+  anonymous.value = false
 }
 
 watch(open, (v) => {
@@ -47,28 +49,29 @@ function submit() {
     image: tab.value === 'image' ? image.value.trim() || null : null,
     subreddit: subreddit.value,
     type: tab.value,
+    anonymous: anonymous.value,
   })
   ui.closeCreatePost()
   router.push({ name: 'post', params: { id } })
 }
 
 const tabs = [
-  { value: 'text', label: 'Post', icon: 'text' },
+  { value: 'text', label: 'Story', icon: 'quote' },
   { value: 'image', label: 'Image', icon: 'image' },
   { value: 'link', label: 'Link', icon: 'link' },
 ]
 </script>
 
 <template>
-  <BaseModal v-model:open="open" title="Create a post" max-width="720px">
+  <BaseModal v-model:open="open" title="Share your story" max-width="720px">
     <div class="form">
       <label class="field">
-        <span class="label">Community</span>
+        <span class="label">Topic</span>
         <div class="select">
           <span class="prefix">r/</span>
           <select v-model="subreddit">
             <option v-for="c in communities.communities" :key="c.name" :value="c.name">
-              {{ c.name }}
+              {{ c.icon }}  {{ c.name }} — {{ c.title }}
             </option>
           </select>
         </div>
@@ -100,8 +103,17 @@ const tabs = [
       </label>
 
       <label v-if="tab === 'text'" class="field">
-        <span class="label">Text (optional)</span>
-        <textarea v-model="body" rows="5" placeholder="Write something..." class="input" />
+        <span class="label">Your story</span>
+        <textarea v-model="body" rows="7" placeholder="Tell us what happened. Take your time." class="input" />
+      </label>
+
+      <label class="toggle">
+        <input v-model="anonymous" type="checkbox" />
+        <span class="toggle-track"><span class="toggle-thumb" /></span>
+        <span>
+          <span class="toggle-title">Post anonymously</span>
+          <span class="toggle-hint">Some things are easier to say to strangers. Your name won't be attached.</span>
+        </span>
       </label>
 
       <label v-if="tab === 'image'" class="field">
@@ -120,7 +132,7 @@ const tabs = [
 
     <template #footer>
       <button class="btn ghost" @click="ui.closeCreatePost()">Cancel</button>
-      <button class="btn primary" :disabled="!canSubmit" @click="submit">Post</button>
+      <button class="btn primary" :disabled="!canSubmit" @click="submit">Share story</button>
     </template>
   </BaseModal>
 </template>
@@ -199,6 +211,59 @@ const tabs = [
   background: var(--bg-canvas);
 }
 .preview img { max-height: 240px; object-fit: contain; }
+
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.toggle input { display: none; }
+.toggle-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  margin-top: 2px;
+}
+.toggle-thumb {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 16px;
+  height: 16px;
+  background: var(--text-secondary);
+  border-radius: 50%;
+  transition: transform var(--dur-base) var(--ease-spring), background var(--dur-fast) var(--ease-out);
+}
+.toggle input:checked + .toggle-track {
+  background: var(--accent-orange);
+  border-color: var(--accent-orange);
+}
+.toggle input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(16px);
+  background: white;
+}
+.toggle-title {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.toggle-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
 
 .btn {
   padding: 9px 18px;

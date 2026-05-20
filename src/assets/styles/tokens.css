@@ -1,4 +1,5 @@
-:root {
+:root,
+:root[data-theme='dark'] {
   color-scheme: dark;
 
   /* Surfaces */
@@ -38,6 +39,10 @@
   --shadow-lg: 0 12px 32px hsla(0 0% 0% / 0.5), 0 4px 12px hsla(0 0% 0% / 0.3);
   --shadow-glow-orange: 0 0 24px hsla(16 100% 55% / 0.35);
 
+  /* Backdrop gradients */
+  --bg-accent-1: hsla(16 100% 55% / 0.06);
+  --bg-accent-2: hsla(265 80% 60% / 0.06);
+
   /* Radii */
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -45,7 +50,7 @@
   --radius-xl: 20px;
   --radius-pill: 999px;
 
-  /* Spacing scale */
+  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -58,7 +63,7 @@
   --navbar-height: 56px;
   --sidebar-width: 248px;
   --aside-width: 312px;
-  --content-max: 660px;
+  --content-max: 680px;
 
   /* Motion */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -69,4 +74,43 @@
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Source Serif 4', 'Georgia', serif;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg-canvas: hsl(40 25% 97%);
+  --bg-surface: hsl(0 0% 100%);
+  --bg-elevated: hsl(40 20% 96%);
+  --bg-hover: hsl(40 18% 93%);
+
+  --glass: hsla(0 0% 100% / 0.7);
+  --glass-strong: hsla(0 0% 100% / 0.88);
+  --glass-border: hsla(220 14% 30% / 0.12);
+
+  --text-primary: hsl(220 18% 14%);
+  --text-secondary: hsl(220 10% 38%);
+  --text-muted: hsl(220 8% 52%);
+
+  --accent-orange: hsl(16 95% 50%);
+  --accent-orange-soft: hsla(16 95% 50% / 0.12);
+  --accent-blue: hsl(220 85% 50%);
+  --accent-blue-soft: hsla(220 85% 50% / 0.1);
+  --accent-purple: hsl(265 70% 55%);
+  --downvote-blue: hsl(220 70% 50%);
+  --downvote-blue-soft: hsla(220 70% 50% / 0.1);
+
+  --success: hsl(145 65% 38%);
+
+  --border-subtle: hsla(220 15% 30% / 0.1);
+  --border-strong: hsla(220 15% 30% / 0.22);
+
+  --shadow-sm: 0 1px 2px hsla(220 20% 20% / 0.08);
+  --shadow-md: 0 4px 12px hsla(220 20% 20% / 0.08), 0 2px 4px hsla(220 20% 20% / 0.04);
+  --shadow-lg: 0 12px 32px hsla(220 20% 20% / 0.12), 0 4px 12px hsla(220 20% 20% / 0.06);
+  --shadow-glow-orange: 0 4px 16px hsla(16 95% 50% / 0.3);
+
+  --bg-accent-1: hsla(16 95% 50% / 0.05);
+  --bg-accent-2: hsla(265 70% 55% / 0.04);
 }

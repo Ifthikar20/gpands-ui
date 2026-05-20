@@ -4,59 +4,44 @@ import { useRoute } from 'vue-router'
 import PostFeed from '@/components/post/PostFeed.vue'
 import { usePostsStore } from '@/stores/posts.js'
 import { useCommunitiesStore } from '@/stores/communities.js'
-import { useUiStore } from '@/stores/ui.js'
 import { formatCount } from '@/composables/useVote.js'
-import SvgIcon from '@/components/icons/SvgIcon.vue'
-import CapsuleChip from '@/components/common/CapsuleChip.vue'
 
 const route = useRoute()
 const postsStore = usePostsStore()
 const communities = useCommunitiesStore()
-const ui = useUiStore()
 
 const subreddit = computed(() => route.params.subreddit)
 const community = computed(() => communities.getCommunity(subreddit.value))
 
 const posts = computed(() => {
-  const all = postsStore.sortedPosts(ui.activeSort)
+  const all = postsStore.sortedPosts('new')
   return all.filter((p) => p.subreddit === subreddit.value)
 })
+
+function toggleFollow() {
+  if (!community.value) return
+  communities.toggleJoin(community.value.name)
+}
 </script>
 
 <template>
   <div class="sub-view">
-    <header v-if="community" class="banner-card paper">
-      <div class="banner" :style="{ background: community.color }" />
-      <div class="banner-meta">
-        <span class="banner-icon" :style="{ background: community.color }">
-          <SvgIcon :name="community.icon" :size="36" />
-        </span>
-        <div class="banner-info">
-          <CapsuleChip :name="community.name" size="lg" :linkable="false" />
-          <h1 class="title">{{ community.title }}</h1>
-          <p class="muted">{{ formatCount(community.members) }} members · <span class="online"><span class="dot" />{{ formatCount(community.online) }} online</span></p>
-        </div>
+    <header class="letterhead">
+      <p class="kicker">Letters from</p>
+      <h1 class="title">{{ community?.title || subreddit }}</h1>
+      <p v-if="community" class="meta">
+        <span>{{ formatCount(community.members) }} members</span>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <span class="online"><span class="dot" />{{ formatCount(community.online) }} online</span>
+        <span class="sep" aria-hidden="true">&middot;</span>
         <button
-          class="join"
-          :class="{ joined: communities.isJoined(community.name) }"
-          @click="communities.toggleJoin(community.name)"
-        >
-          {{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}
-        </button>
-      </div>
-    </header>
-
-    <header v-else class="banner-card paper unknown">
-      <div class="banner unknown-banner" />
-      <div class="banner-meta">
-        <span class="banner-icon unknown-icon">
-          <SvgIcon name="globe" :size="36" />
-        </span>
-        <div class="banner-info">
-          <h1 class="title">{{ subreddit }}</h1>
-          <p class="muted">This capsule doesn't exist (yet).</p>
-        </div>
-      </div>
+          class="follow-link"
+          :class="{ following: communities.isJoined(community.name) }"
+          @click="toggleFollow"
+        >{{ communities.isJoined(community.name) ? 'Following' : 'Follow' }}</button>
+      </p>
+      <p v-else class="meta">This capsule doesn't exist yet.</p>
+      <div class="rule" aria-hidden="true" />
     </header>
 
     <PostFeed :posts="posts" />
@@ -64,69 +49,86 @@ const posts = computed(() => {
 </template>
 
 <style scoped>
-.sub-view { display: flex; flex-direction: column; gap: var(--space-4); }
-.banner-card {
-  border-radius: var(--radius-card);
-  overflow: hidden;
-}
-.banner { height: 96px; }
-.banner-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: 0 var(--space-4) var(--space-4);
-  margin-top: -28px;
-}
-.banner-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: white;
-  border: 4px solid var(--bg-surface);
-}
-.unknown-banner {
-  background: linear-gradient(135deg, var(--bg-elevated), var(--bg-hover));
-}
-.unknown-icon {
-  background: var(--bg-elevated);
-  color: var(--text-muted);
-}
-.banner-info {
-  flex: 1;
-  padding-top: 28px;
+.sub-view {
   display: flex;
   flex-direction: column;
+  gap: var(--space-6);
+}
+
+.letterhead {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 6px;
-  align-items: flex-start;
+  padding: var(--space-4) 0 0;
 }
-.banner-info .title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-.muted { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-.online { color: var(--success); display: inline-flex; align-items: center; gap: 4px; }
-.online .dot {
-  width: 6px;
-  height: 6px;
-  background: var(--success);
-  border-radius: 50%;
-}
-.join {
-  margin-top: 28px;
-  padding: 8px 22px;
-  background: var(--accent-orange);
-  color: white;
+.kicker {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
   font-weight: 700;
-  border-radius: var(--radius-pill);
-  transition: filter var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
-.join:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.join.joined {
-  background: transparent;
-  border: 1px solid var(--border-strong);
+.title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1.1;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+}
+.meta {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.sep { color: var(--text-muted); }
+.online {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--success);
+  font-weight: 700;
+}
+.online .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.follow-link {
+  background: transparent;
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent-orange);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.follow-link:hover { text-decoration: underline; }
+.follow-link.following { color: var(--text-muted); }
+
+.rule {
+  margin-top: var(--space-4);
+  height: 1px;
+  width: 80px;
+  background: var(--paper-line);
+}
+
+@media (max-width: 640px) {
+  .title { font-size: 30px; }
 }
 </style>

@@ -7,28 +7,6 @@ const theme = useThemeStore()
 </script>
 
 <template>
-  <header class="masthead">
-    <router-link to="/" class="brand" aria-label="Good People & Story — home">
-      <span class="brand-line">Good People</span>
-      <span class="brand-amp">&amp;</span>
-      <span class="brand-line">Story</span>
-    </router-link>
-
-    <nav class="nav">
-      <router-link to="/" class="link">Home</router-link>
-      <span class="sep" aria-hidden="true">&middot;</span>
-      <router-link to="/topics" class="link">Topics</router-link>
-      <span class="sep" aria-hidden="true">&middot;</span>
-      <router-link to="/about" class="link">About</router-link>
-      <span class="sep" aria-hidden="true">&middot;</span>
-      <router-link to="/u/me" class="link">Profile</router-link>
-      <span class="sep" aria-hidden="true">&middot;</span>
-      <button class="theme-btn" aria-label="Toggle theme" @click="theme.toggle()">
-        <SvgIcon :name="theme.isDark ? 'sun' : 'moon'" :size="14" />
-      </button>
-    </nav>
-  </header>
-
   <div class="layout">
     <main class="main">
       <router-view v-slot="{ Component }">
@@ -37,19 +15,60 @@ const theme = useThemeStore()
         </Transition>
       </router-view>
     </main>
+
+    <footer class="colophon">
+      <router-link to="/" class="brand" aria-label="Good People & Story — home">
+        <span class="brand-line">Good People</span>
+        <span class="brand-amp">&amp;</span>
+        <span class="brand-line">Story</span>
+      </router-link>
+
+      <nav class="nav">
+        <router-link to="/" class="link">Home</router-link>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <router-link to="/topics" class="link">Topics</router-link>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <router-link to="/about" class="link">About</router-link>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <router-link to="/u/me" class="link">Profile</router-link>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <button class="theme-btn" aria-label="Toggle theme" @click="theme.toggle()">
+          <SvgIcon :name="theme.isDark ? 'sun' : 'moon'" :size="14" />
+        </button>
+      </nav>
+    </footer>
   </div>
   <CreatePostModal />
 </template>
 
 <style scoped>
-/* ── Masthead ─────────────────────────────────────────────── */
-.masthead {
-  text-align: center;
-  padding: var(--space-8) var(--space-4) var(--space-5);
+.layout {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  min-width: 0;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+}
+
+/* ── Colophon (footer) ────────────────────────────────────── */
+.colophon {
+  margin-top: var(--space-8);
+  padding: var(--space-6) var(--space-4) var(--space-6);
+  border-top: 1px dashed var(--paper-line);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
+  text-align: center;
 }
 
 .brand {
@@ -62,7 +81,7 @@ const theme = useThemeStore()
   letter-spacing: -0.01em;
 }
 .brand-line {
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 500;
   font-style: italic;
   line-height: 1.05;
@@ -70,7 +89,7 @@ const theme = useThemeStore()
 .brand-amp {
   font-family: var(--font-script);
   font-style: normal;
-  font-size: 56px;
+  font-size: 46px;
   font-weight: 500;
   color: var(--accent-orange);
   line-height: 0.75;
@@ -86,7 +105,7 @@ const theme = useThemeStore()
 }
 .link {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-body);
   transition: color var(--dur-fast) var(--ease-out);
@@ -113,23 +132,10 @@ const theme = useThemeStore()
   background: var(--bg-hover);
 }
 
-/* ── Layout ───────────────────────────────────────────────── */
-.layout {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-5) var(--space-8);
-}
-.main {
-  min-width: 0;
-  max-width: var(--content-max);
-  margin: 0 auto;
-}
-
 @media (max-width: 720px) {
-  .masthead { padding: var(--space-6) var(--space-4) var(--space-4); }
-  .brand-line { font-size: 26px; }
-  .brand-amp { font-size: 42px; }
-  .layout { padding: 0 var(--space-4) var(--space-6); }
+  .layout { padding: var(--space-4) var(--space-4) 0; }
+  .brand-line { font-size: 22px; }
+  .brand-amp { font-size: 36px; }
+  .colophon { padding: var(--space-5) var(--space-3); }
 }
 </style>

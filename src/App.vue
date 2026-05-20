@@ -32,12 +32,15 @@ onBeforeUnmount(() => stopAmbient())
 
 <style scoped>
 .layout {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--aside-width);
-  gap: var(--space-5);
-  padding: var(--space-4) var(--space-5);
+  /* Both rails are position: fixed against the viewport. We reserve
+     their lanes here with padding so the main column never overlaps
+     them and never centers between them. */
+  padding:
+    var(--space-5)
+    calc(var(--aside-width) + var(--space-5))
+    var(--space-6)
+    calc(var(--sidebar-width) + var(--space-5));
   width: 100%;
-  align-items: start;
 }
 .main {
   min-width: 0;
@@ -50,15 +53,12 @@ onBeforeUnmount(() => stopAmbient())
 
 @media (max-width: 1280px) {
   .layout {
-    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-    padding: var(--space-4);
+    padding-right: var(--space-5);
   }
 }
 @media (max-width: 900px) {
   .layout {
-    grid-template-columns: minmax(0, 1fr);
-    padding: var(--space-3);
-    gap: var(--space-4);
+    padding: var(--space-4);
   }
 }
 </style>

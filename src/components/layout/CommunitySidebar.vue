@@ -63,15 +63,20 @@ function go(name) {
 
 <style scoped>
 .aside {
+  position: fixed;
+  top: var(--navbar-height);
+  right: 0;
   width: var(--aside-width);
-  position: sticky;
-  top: calc(var(--navbar-height) + var(--space-4));
+  height: calc(100vh - var(--navbar-height));
+  background: var(--bg-canvas);
+  border-left: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  align-self: flex-start;
-  max-height: calc(100vh - var(--navbar-height) - var(--space-6));
   overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  z-index: 10;
 }
 
 .card {

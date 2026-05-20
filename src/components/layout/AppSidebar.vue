@@ -99,17 +99,20 @@ const popular = computed(() => communities.popularCommunities.slice(0, 6))
 
 <style scoped>
 .sidebar {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
   width: var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
   background: var(--bg-surface);
   border-right: 1px solid var(--border-subtle);
-  height: calc(100vh - var(--navbar-height));
-  position: sticky;
-  top: var(--navbar-height);
   overflow-y: auto;
+  overflow-x: hidden;
   padding: var(--space-4) var(--space-3) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  z-index: 20;
 }
 .nav {
   display: flex;

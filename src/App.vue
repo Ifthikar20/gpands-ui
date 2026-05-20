@@ -34,10 +34,9 @@ onBeforeUnmount(() => stopAmbient())
 .layout {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--aside-width);
-  gap: var(--space-6);
-  padding: var(--space-5) var(--space-6);
-  max-width: var(--layout-max);
-  margin: 0 auto;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  width: 100%;
   align-items: start;
 }
 .main {

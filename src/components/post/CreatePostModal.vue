@@ -69,14 +69,14 @@ function submit() {
 }
 
 const tabs = [
-  { value: 'text', label: 'Note', icon: 'quote' },
+  { value: 'text', label: 'Story', icon: 'quote' },
   { value: 'image', label: 'Image', icon: 'image' },
   { value: 'link', label: 'Link', icon: 'link' },
 ]
 </script>
 
 <template>
-  <BaseModal v-model:open="open" title="Send a note" max-width="720px">
+  <BaseModal v-model:open="open" title="Post a story" max-width="720px">
     <div class="form">
       <label class="field">
         <span class="label">Topic</span>
@@ -115,7 +115,7 @@ const tabs = [
       </label>
 
       <label v-if="tab === 'text'" class="field">
-        <span class="label">Your note</span>
+        <span class="label">Your story</span>
         <textarea v-model="body" rows="7" placeholder="Tell us what happened. Take your time." class="input" />
       </label>
 
@@ -162,7 +162,7 @@ const tabs = [
 
     <template #footer>
       <button class="btn ghost" @click="ui.closeCreatePost()">Cancel</button>
-      <button class="btn primary" :disabled="!canSubmit" @click="submit">Send note</button>
+      <button class="btn primary" :disabled="!canSubmit" @click="submit">Post story</button>
     </template>
   </BaseModal>
 </template>

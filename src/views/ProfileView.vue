@@ -92,7 +92,7 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
     <div v-if="tab === 'stories'" class="list">
       <PostCard v-for="p in userPosts" :key="p.id" :post="p" />
       <div v-if="!userPosts.length" class="empty">
-        No notes yet. <span v-if="username === userStore.currentUser.username">Click <em>Send a note</em> to write one.</span>
+        No stories yet. <span v-if="username === userStore.currentUser.username">Click <em>Post a story</em> to write one.</span>
       </div>
     </div>
 

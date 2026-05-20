@@ -19,7 +19,7 @@ const ui = useUiStore()
       @click="ui.openCreatePost()"
     >
       <SvgIcon name="quote" :size="16" />
-      <span>Send a note&hellip;</span>
+      <span>Post a story&hellip;</span>
     </button>
 
     <TransitionGroup name="list" tag="div" class="letters">
@@ -27,7 +27,7 @@ const ui = useUiStore()
     </TransitionGroup>
 
     <div v-if="!posts.length" class="empty">
-      <p>No notes here yet.</p>
+      <p>No stories here yet.</p>
     </div>
   </div>
 </template>

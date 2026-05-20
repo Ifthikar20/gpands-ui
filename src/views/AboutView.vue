@@ -46,7 +46,7 @@ const futures = [
       </p>
       <div class="hero-actions">
         <button class="btn primary" @click="ui.openCreatePost()">
-          <SvgIcon name="quote" :size="16" /> Send a note
+          <SvgIcon name="quote" :size="16" /> Post a story
         </button>
         <router-link to="/topics" class="btn ghost">Browse topics</router-link>
       </div>
@@ -96,7 +96,7 @@ const futures = [
       <h2>Tell us what happened.</h2>
       <p>The version of this you tell to strangers might be the truest one.</p>
       <button class="btn primary large" @click="ui.openCreatePost()">
-        <SvgIcon name="quote" :size="16" /> Send a note
+        <SvgIcon name="quote" :size="16" /> Post a story
       </button>
     </footer>
   </div>

@@ -39,7 +39,7 @@ function closeMobile() { mobileOpen.value = false }
         </button>
         <button class="send" @click="ui.openCreatePost()">
           <SvgIcon name="quote" :size="14" />
-          <span>Send a note</span>
+          <span>Post a story</span>
         </button>
         <router-link to="/u/me" class="user" aria-label="My profile" @click="closeMobile">
           <UserAvatar :username="user.currentUser.username" :size="32" online />

@@ -7,6 +7,28 @@ const theme = useThemeStore()
 </script>
 
 <template>
+  <header class="masthead">
+    <router-link to="/" class="brand" aria-label="Good People & Story — home">
+      <span class="brand-line">Good People</span>
+      <span class="brand-amp">&amp;</span>
+      <span class="brand-line">Story</span>
+    </router-link>
+
+    <nav class="nav">
+      <router-link to="/" class="link">Home</router-link>
+      <span class="sep" aria-hidden="true">&middot;</span>
+      <router-link to="/topics" class="link">Topics</router-link>
+      <span class="sep" aria-hidden="true">&middot;</span>
+      <router-link to="/about" class="link">About</router-link>
+      <span class="sep" aria-hidden="true">&middot;</span>
+      <router-link to="/u/me" class="link">Profile</router-link>
+      <span class="sep" aria-hidden="true">&middot;</span>
+      <button class="theme-btn" aria-label="Toggle theme" @click="theme.toggle()">
+        <SvgIcon :name="theme.isDark ? 'sun' : 'moon'" :size="14" />
+      </button>
+    </nav>
+  </header>
+
   <div class="layout">
     <main class="main">
       <router-view v-slot="{ Component }">
@@ -15,110 +37,99 @@ const theme = useThemeStore()
         </Transition>
       </router-view>
     </main>
-
-    <footer class="footnotes">
-      <span class="brand">
-        <span>Good People</span>
-        <span class="amp">&amp;</span>
-        <span class="story">Story</span>
-      </span>
-      <nav class="links">
-        <router-link to="/">Home</router-link>
-        <span class="sep" aria-hidden="true">·</span>
-        <router-link to="/topics">Topics</router-link>
-        <span class="sep" aria-hidden="true">·</span>
-        <router-link to="/about">About</router-link>
-        <span class="sep" aria-hidden="true">·</span>
-        <router-link to="/u/me">Profile</router-link>
-      </nav>
-      <button class="theme" aria-label="Toggle theme" @click="theme.toggle()">
-        <SvgIcon :name="theme.isDark ? 'sun' : 'moon'" :size="14" />
-      </button>
-    </footer>
   </div>
   <CreatePostModal />
 </template>
 
 <style scoped>
-.layout {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-5) var(--space-6);
-  min-height: 100vh;
+/* ── Masthead ─────────────────────────────────────────────── */
+.masthead {
+  text-align: center;
+  padding: var(--space-8) var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
-}
-.main {
-  min-width: 0;
-  max-width: var(--content-max);
-  margin: 0 auto;
-  width: 100%;
-  flex: 1;
+  align-items: center;
+  gap: var(--space-4);
 }
 
-/* ── Quiet footer ─────────────────────────────────────────── */
-.footnotes {
-  margin: var(--space-8) auto 0;
-  padding: var(--space-5) var(--space-3) var(--space-4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  color: var(--text-muted);
-  border-top: 1px dashed var(--paper-line);
-  max-width: 720px;
-}
 .brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   font-family: var(--font-serif, Georgia, serif);
-  font-style: italic;
-  font-size: 16px;
-  color: var(--text-body);
-  letter-spacing: -0.005em;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
-.amp {
-  color: var(--accent-orange);
+.brand-line {
+  font-size: 34px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.05;
+}
+.brand-amp {
   font-family: var(--font-script);
   font-style: normal;
-  font-size: 22px;
-  line-height: 0.6;
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--accent-orange);
+  line-height: 0.75;
+  margin: 2px 0;
 }
 
-.links {
+.nav {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
-  font-family: var(--font-typewriter);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
 }
-.links a {
-  color: var(--text-muted);
+.link {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
   transition: color var(--dur-fast) var(--ease-out);
 }
-.links a:hover { color: var(--text-primary); }
+.link:hover { color: var(--text-primary); }
+.link.router-link-exact-active {
+  color: var(--accent-orange);
+  font-weight: 600;
+}
 .sep { color: var(--text-muted); }
-
-.theme {
-  width: 28px;
-  height: 28px;
-  display: grid;
+.theme-btn {
+  background: transparent;
+  color: var(--text-muted);
+  width: 26px;
+  height: 26px;
+  display: inline-grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--text-muted);
+  cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
-.theme:hover { background: var(--bg-hover); color: var(--text-primary); }
+.theme-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+/* ── Layout ───────────────────────────────────────────────── */
+.layout {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-5) var(--space-8);
+}
+.main {
+  min-width: 0;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
 
 @media (max-width: 720px) {
-  .layout { padding: var(--space-5) var(--space-4); }
-  .footnotes { gap: var(--space-3); font-size: 12px; }
+  .masthead { padding: var(--space-6) var(--space-4) var(--space-4); }
+  .brand-line { font-size: 26px; }
+  .brand-amp { font-size: 42px; }
+  .layout { padding: 0 var(--space-4) var(--space-6); }
 }
 </style>

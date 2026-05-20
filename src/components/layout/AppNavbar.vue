@@ -47,7 +47,7 @@ function onSearch(e) {
       <div class="right">
         <button class="share-btn" @click="ui.openCreatePost()">
           <SvgIcon name="quote" :size="16" />
-          <span>Share a story</span>
+          <span>Send a note</span>
         </button>
         <button class="icon-btn" aria-label="Toggle theme" @click="theme.toggle()">
           <Transition name="fade" mode="out-in">

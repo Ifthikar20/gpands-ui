@@ -105,6 +105,14 @@ function toggleFollow(e) {
       <button class="follow-pill" :class="{ following: isFollowing }" @click="toggleFollow">
         {{ isFollowing ? 'Following' : 'Follow' }}
       </button>
+
+      <!-- Postage stamp (top-right corner) -->
+      <div class="stamp" :style="{ '--stamp-color': community?.color || 'var(--accent-orange)' }" aria-hidden="true">
+        <span class="stamp-inner">
+          <span class="stamp-mono">G&amp;S</span>
+          <span class="stamp-value">{{ post.subreddit.slice(0, 4) }}</span>
+        </span>
+      </div>
     </header>
 
     <h3 class="title">{{ post.title }}</h3>
@@ -196,13 +204,17 @@ function toggleFollow(e) {
     linear-gradient(135deg, hsla(0 0% 0% / 0.03), transparent 70%),
     radial-gradient(ellipse at bottom right, hsla(0 0% 0% / 0.05), transparent 60%);
   box-shadow: 0 1px 2px var(--paper-shadow), 0 12px 28px hsla(0 0% 0% / 0.08);
+  /* 3D context so the flap rotates with depth instead of flattening. */
+  perspective: 1500px;
+  perspective-origin: 50% 0%;
 }
 .envelope.sealed {
   padding-top: 175px;
 }
 
-/* The triangular flap. Default state is "opened" (flipped up, hidden).
-   Sealed state shows the flap covering the top of the card. */
+/* The triangular flap. Sealed = visible (sits flat over the top of
+   the card). Unsealed runs the flap-lift keyframes that lift, pause
+   at -18deg, then rotate fully back. */
 .env-flap {
   position: absolute;
   top: 0;
@@ -217,22 +229,22 @@ function toggleFollow(e) {
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
   filter: drop-shadow(0 8px 14px hsla(0 0% 0% / 0.22));
-  pointer-events: none;
   z-index: 2;
-  /* Default = opened */
-  transform: rotateX(-180deg);
-  opacity: 0;
-  transition:
-    transform 700ms var(--ease-out),
-    opacity 350ms var(--ease-out) 250ms;
-}
-.envelope.sealed .env-flap {
+  /* Sealed initial state — visible, flat. */
   transform: rotateX(0deg);
   opacity: 1;
-  transition: none;
+}
+.envelope:not(.sealed) .env-flap {
+  pointer-events: none;
+  animation: flap-lift 780ms cubic-bezier(0.4, 0, 0.3, 1) 180ms both;
+}
+@keyframes flap-lift {
+  0%   { transform: rotateX(0deg);    opacity: 1; filter: drop-shadow(0 8px 14px hsla(0 0% 0% / 0.22)); }
+  18%  { transform: rotateX(-18deg);              filter: drop-shadow(0 18px 24px hsla(0 0% 0% / 0.32)); }
+  100% { transform: rotateX(-172deg); opacity: 0; filter: drop-shadow(0 0 0 transparent); }
 }
 
-/* Wax seal: absolute-positioned over the flap tip while sealed. */
+/* Wax seal — sealed by default; cracks open via keyframes. */
 .wax {
   position: absolute;
   top: 95px;
@@ -253,18 +265,10 @@ function toggleFollow(e) {
     0 8px 18px hsla(0 0% 0% / 0.35),
     inset 0 -8px 16px hsla(0 0% 0% / 0.28),
     inset 0 8px 14px hsla(0 0% 100% / 0.22);
-  /* Default = cracked open */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%) scale(1.6) rotate(20deg);
-  transition:
-    transform 500ms var(--ease-spring),
-    opacity 350ms var(--ease-out);
-}
-.envelope.sealed .wax {
+  /* Sealed initial state — full size, centered, visible. */
   opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) scale(1) rotate(0deg);
+  transform: translateX(-50%) scale(1) rotate(0);
+  transition: transform 240ms var(--ease-spring), box-shadow var(--dur-base) var(--ease-out);
 }
 .envelope.sealed:hover .wax {
   transform: translateX(-50%) scale(1.05) rotate(-4deg);
@@ -272,6 +276,24 @@ function toggleFollow(e) {
     0 12px 24px hsla(0 0% 0% / 0.4),
     inset 0 -8px 16px hsla(0 0% 0% / 0.28),
     inset 0 8px 14px hsla(0 0% 100% / 0.22);
+}
+.envelope:not(.sealed) .wax {
+  pointer-events: none;
+  animation: wax-crack 500ms cubic-bezier(0.4, 0, 0.5, 1.3) both;
+}
+@keyframes wax-crack {
+  0%   { transform: translateX(-50%) scale(1)    rotate(0deg);   opacity: 1; }
+  20%  { transform: translateX(-50%) scale(1.18) rotate(-5deg);  opacity: 1; }
+  100% { transform: translateX(-50%) scale(1.7)  rotate(32deg) translateY(-38px); opacity: 0; }
+}
+
+/* Letter emerging from inside the envelope (anonymous only). */
+.envelope:not(.sealed) .reveal.open .reveal-inner {
+  animation: letter-emerge 600ms cubic-bezier(0.3, 1.2, 0.5, 1) 380ms both;
+}
+@keyframes letter-emerge {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 .wax::before {
   content: '';
@@ -329,6 +351,56 @@ function toggleFollow(e) {
 }
 .follow-pill:hover { background: var(--bg-hover); }
 .follow-pill.following { color: var(--text-muted); }
+
+/* Postage stamp on letter cards (postsecret-style). */
+.letter-head { position: relative; }
+.stamp {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 56px;
+  height: 68px;
+  background: var(--stamp-color);
+  /* Scalloped edge via radial-gradient mask. */
+  --notch: radial-gradient(circle 3px at 3px 50%, transparent 99%, black 100%);
+  -webkit-mask:
+    radial-gradient(circle 4px at 4px 4px,   transparent 99%, black 100%) top left,
+    radial-gradient(circle 4px at 4px -4px,  transparent 99%, black 100%) top right,
+    linear-gradient(black, black);
+  -webkit-mask-composite: source-over;
+  padding: 6px;
+  display: grid;
+  place-items: center;
+  transform: rotate(-4deg);
+  box-shadow: 0 3px 6px hsla(0 0% 0% / 0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+.stamp-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed hsla(0 0% 100% / 0.55);
+  border-radius: 3px;
+  color: white;
+  text-shadow: 0 1px 1px hsla(0 0% 0% / 0.25);
+}
+.stamp-mono {
+  font-family: var(--font-serif, Georgia, serif);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.stamp-value {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+}
 
 /* ── Title ─────────────────────────────────────────────────── */
 .title {

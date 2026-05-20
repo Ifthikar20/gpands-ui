@@ -8,6 +8,12 @@
   --bg-elevated: hsl(220 14% 16%);
   --bg-hover: hsl(220 14% 20%);
 
+  /* Paper — letter and envelope card backgrounds */
+  --paper: hsl(35 14% 13%);
+  --paper-line: hsla(35 20% 65% / 0.08);
+  --paper-shadow: hsla(0 0% 0% / 0.45);
+  --wax-shine: hsla(0 0% 100% / 0.35);
+
   /* Glass */
   --glass: hsla(220 14% 18% / 0.6);
   --glass-strong: hsla(220 14% 14% / 0.85);
@@ -86,6 +92,11 @@
   --bg-surface: hsl(0 0% 100%);
   --bg-elevated: hsl(40 20% 96%);
   --bg-hover: hsl(40 18% 93%);
+
+  --paper: hsl(40 38% 95%);
+  --paper-line: hsla(35 20% 30% / 0.08);
+  --paper-shadow: hsla(35 30% 30% / 0.18);
+  --wax-shine: hsla(0 0% 100% / 0.5);
 
   --glass: hsla(0 0% 100% / 0.7);
   --glass-strong: hsla(0 0% 100% / 0.88);

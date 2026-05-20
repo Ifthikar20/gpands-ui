@@ -23,7 +23,7 @@ const sorted = computed(() => {
 </script>
 
 <template>
-  <section class="thread">
+  <section class="thread paper">
     <div class="thread-head">
       <span class="muted">Sort by</span>
       <div class="sort-select">
@@ -51,14 +51,11 @@ const sorted = computed(() => {
 
 <style scoped>
 .thread {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-5) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  box-shadow: var(--shadow-sm);
 }
 .thread-head {
   display: flex;

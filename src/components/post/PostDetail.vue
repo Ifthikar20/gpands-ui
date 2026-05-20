@@ -30,7 +30,7 @@ function submitComment() {
 </script>
 
 <template>
-  <article class="detail">
+  <article class="detail paper">
     <div class="vote-col">
       <VoteWidget :score="post.score" :user-vote="post.userVote" @vote="vote" />
     </div>
@@ -87,11 +87,8 @@ function submitComment() {
 .detail {
   display: flex;
   gap: var(--space-4);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-5) var(--space-6);
-  box-shadow: var(--shadow-sm);
 }
 .vote-col {
   background: var(--bg-elevated);

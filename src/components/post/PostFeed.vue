@@ -23,7 +23,7 @@ const sort = computed({
 
 <template>
   <div class="feed">
-    <div v-if="showCreatePrompt" class="create-prompt">
+    <div v-if="showCreatePrompt" class="create-prompt paper">
       <UserAvatar :username="user.currentUser.username" :size="36" />
       <button class="create-input" @click="ui.openCreatePost()">Share a story…</button>
       <button class="icon-pill" @click="ui.openCreatePost()" aria-label="Image story">
@@ -57,11 +57,8 @@ const sort = computed({
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-3) var(--space-4);
-  box-shadow: var(--shadow-sm);
 }
 .create-input {
   flex: 1;

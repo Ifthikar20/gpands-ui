@@ -53,7 +53,7 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
 
 <template>
   <div v-if="user" class="profile">
-    <header class="profile-head">
+    <header class="profile-head paper">
       <div class="banner" />
       <div class="head-content">
         <UserAvatar :username="user.username" :size="96" online />
@@ -100,7 +100,7 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
       {{ commentCount }} comment{{ commentCount === 1 ? '' : 's' }} across stories. Comment threads coming soon.
     </div>
 
-    <div v-if="tab === 'about'" class="about-card">
+    <div v-if="tab === 'about'" class="about-card paper">
       <h3>About {{ user.displayName || 'u/' + user.username }}</h3>
       <p v-if="user.bio">{{ user.bio }}</p>
       <p v-else class="muted">No bio yet.</p>
@@ -111,7 +111,7 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
     </div>
   </div>
 
-  <div v-else class="missing">
+  <div v-else class="missing paper">
     <h2>User not found</h2>
     <p>u/{{ route.params.username }} doesn't exist.</p>
     <router-link to="/" class="back-link">Back to home</router-link>
@@ -121,8 +121,6 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
 <style scoped>
 .profile { display: flex; flex-direction: column; gap: var(--space-4); }
 .profile-head {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
@@ -220,8 +218,6 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
 
 .about-card {
   padding: var(--space-5);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
 }
 .about-card h3 { font-size: 16px; font-weight: 700; margin-bottom: var(--space-3); }
@@ -242,8 +238,6 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
 .about-card dd { font-weight: 600; }
 
 .missing {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: var(--space-8);
   text-align: center;

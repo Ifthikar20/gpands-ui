@@ -39,6 +39,22 @@ body {
   color: var(--text-primary);
 }
 
+/* ── Paper utility ─────────────────────────────────────────────
+   Every content card across the app uses this class so the stationery
+   metaphor stays consistent. Composes background color, ruled-paper
+   texture, and a soft paper shadow. */
+.paper {
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(transparent 0, transparent 27px, var(--paper-line) 28px),
+    radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.04), transparent 60%);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 2px var(--paper-shadow), 0 12px 28px hsla(0 0% 0% / 0.05);
+}
+.paper.paper-flat {
+  box-shadow: none;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;

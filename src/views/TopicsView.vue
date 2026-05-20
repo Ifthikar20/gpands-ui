@@ -42,7 +42,7 @@ function postCount(name) {
         v-for="c in list"
         :key="c.name"
         :to="`/c/${c.name}`"
-        class="topic-card"
+        class="topic-card paper"
       >
         <div class="banner" :style="{ background: c.color }">
           <span class="banner-icon">
@@ -115,17 +115,13 @@ function postCount(name) {
 .topic-card {
   display: flex;
   flex-direction: column;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
   cursor: pointer;
 }
 .topic-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
   border-color: var(--border-strong);
 }
 .banner {

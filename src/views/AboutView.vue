@@ -30,7 +30,7 @@ const futures = [
 
 <template>
   <div class="about">
-    <header class="hero">
+    <header class="hero paper">
       <div class="hero-mark">
         <SvgIcon name="gps" :size="56" />
       </div>
@@ -69,7 +69,7 @@ const futures = [
     <section class="principles">
       <h2>What we believe</h2>
       <ol>
-        <li v-for="(p, i) in principles" :key="i">
+        <li v-for="(p, i) in principles" :key="i" class="paper">
           <span class="num">{{ String(i + 1).padStart(2, '0') }}</span>
           <div>
             <h3>{{ p.title }}</h3>
@@ -92,7 +92,7 @@ const futures = [
       </ul>
     </section>
 
-    <footer class="cta">
+    <footer class="cta paper">
       <h2>Tell us what happened.</h2>
       <p>The version of this you tell to strangers might be the truest one.</p>
       <button class="btn primary large" @click="ui.openCreatePost()">
@@ -113,8 +113,6 @@ const futures = [
 .hero {
   text-align: center;
   padding: var(--space-8) var(--space-4);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   position: relative;
   overflow: hidden;
@@ -218,8 +216,6 @@ section h2 {
   display: flex;
   gap: var(--space-4);
   padding: var(--space-4) var(--space-5);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
@@ -275,8 +271,6 @@ section h2 {
 .cta {
   text-align: center;
   padding: var(--space-8) var(--space-4);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
 }
 .cta h2 {

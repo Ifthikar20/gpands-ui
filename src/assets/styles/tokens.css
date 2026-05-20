@@ -2,11 +2,11 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  /* Surfaces */
-  --bg-canvas: hsl(220 14% 8%);
-  --bg-surface: hsl(220 14% 12%);
-  --bg-elevated: hsl(220 14% 16%);
-  --bg-hover: hsl(220 14% 20%);
+  /* Surfaces — warm tones so the page reads as a desk the letters sit on. */
+  --bg-canvas: hsl(35 10% 8%);
+  --bg-surface: hsl(35 9% 12%);
+  --bg-elevated: hsl(35 8% 16%);
+  --bg-hover: hsl(35 8% 20%);
 
   /* Paper — letter and envelope card backgrounds */
   --paper: hsl(35 14% 13%);

@@ -25,7 +25,7 @@ const posts = computed(() => {
 
 <template>
   <div class="sub-view">
-    <header v-if="community" class="banner-card">
+    <header v-if="community" class="banner-card paper">
       <div class="banner" :style="{ background: community.color }" />
       <div class="banner-meta">
         <span class="banner-icon" :style="{ background: community.color }">
@@ -46,7 +46,7 @@ const posts = computed(() => {
       </div>
     </header>
 
-    <header v-else class="banner-card unknown">
+    <header v-else class="banner-card paper unknown">
       <div class="banner unknown-banner" />
       <div class="banner-meta">
         <span class="banner-icon unknown-icon">
@@ -66,11 +66,8 @@ const posts = computed(() => {
 <style scoped>
 .sub-view { display: flex; flex-direction: column; gap: var(--space-4); }
 .banner-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
 }
 .banner { height: 96px; }
 .banner-meta {

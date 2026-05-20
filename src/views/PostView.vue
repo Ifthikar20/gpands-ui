@@ -30,7 +30,7 @@ function back() {
       <CommentThread :comments="post.comments || []" :post-id="post.id" />
     </template>
 
-    <div v-else class="missing">
+    <div v-else class="missing paper">
       <h2>Post not found</h2>
       <p>The post you're looking for doesn't exist or has been removed.</p>
       <router-link to="/" class="back-link">Back to home</router-link>
@@ -56,8 +56,6 @@ function back() {
 .back-arrow { transform: rotate(90deg); }
 
 .missing {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: var(--space-8);
   text-align: center;

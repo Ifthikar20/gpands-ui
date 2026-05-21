@@ -64,7 +64,10 @@ export function sanitizeUsername(input) {
 
 // === Paper style / texture allowlists ===========================
 const PAPER_STYLES = new Set(['cream', 'ivory', 'linen', 'robin', 'rose', 'sage', 'slate'])
-const PAPER_TEXTURES = new Set(['smooth', 'lined', 'grid', 'parchment', 'cardstock'])
+const PAPER_TEXTURES = new Set([
+  'smooth', 'lined', 'grid', 'parchment', 'cardstock',
+  'scroll', 'vellum', 'newsprint',
+])
 
 export function sanitizePaperStyle(input) {
   return PAPER_STYLES.has(input) ? input : 'cream'

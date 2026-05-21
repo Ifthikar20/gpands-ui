@@ -84,58 +84,115 @@ body {
 
 .texture-lined {
   background-image:
-    repeating-linear-gradient(transparent 0, transparent 27px, hsla(220 80% 55% / 0.22) 28px),
+    repeating-linear-gradient(transparent 0, transparent 23px, hsla(220 80% 55% / 0.36) 24px),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    linear-gradient(90deg, hsla(0 80% 50% / 0.55) 0 1px, transparent 1px 100%),
     radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.03), transparent 60%);
-  background-blend-mode: normal, multiply, normal;
+  background-blend-mode: normal, multiply, normal, normal;
+  background-position: 0 24px, 0 0, 36px 0, 0 0;
+  background-size: auto, auto, auto, auto;
+  background-repeat: repeat, repeat, repeat-y, repeat;
 }
 :root[data-theme='dark'] .texture-lined {
   background-image:
-    repeating-linear-gradient(transparent 0, transparent 27px, hsla(220 80% 70% / 0.18) 28px),
+    repeating-linear-gradient(transparent 0, transparent 23px, hsla(220 80% 70% / 0.28) 24px),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.8  0 0 0 0 0.75  0 0 0 0 0.65  0 0 0 0.3 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    linear-gradient(90deg, hsla(0 60% 60% / 0.45) 0 1px, transparent 1px 100%),
     radial-gradient(ellipse at top right, hsla(0 0% 0% / 0.03), transparent 60%);
-  background-blend-mode: normal, screen, normal;
+  background-blend-mode: normal, screen, normal, normal;
+  background-position: 0 24px, 0 0, 36px 0, 0 0;
 }
 
 .texture-grid {
   background-image:
-    repeating-linear-gradient(0deg, transparent 0, transparent 19px, hsla(220 25% 45% / 0.14) 20px),
-    repeating-linear-gradient(90deg, transparent 0, transparent 19px, hsla(220 25% 45% / 0.14) 20px),
+    repeating-linear-gradient(0deg, transparent 0, transparent 17px, hsla(220 25% 45% / 0.24) 18px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 17px, hsla(220 25% 45% / 0.24) 18px),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.3 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-blend-mode: normal, normal, multiply;
 }
 :root[data-theme='dark'] .texture-grid {
   background-image:
-    repeating-linear-gradient(0deg, transparent 0, transparent 19px, hsla(220 25% 70% / 0.1) 20px),
-    repeating-linear-gradient(90deg, transparent 0, transparent 19px, hsla(220 25% 70% / 0.1) 20px),
+    repeating-linear-gradient(0deg, transparent 0, transparent 17px, hsla(220 25% 70% / 0.18) 18px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 17px, hsla(220 25% 70% / 0.18) 18px),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.8  0 0 0 0 0.75  0 0 0 0 0.65  0 0 0 0.25 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-blend-mode: normal, normal, screen;
 }
 
 .texture-parchment {
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.25  0 0 0 0 0.1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
-    radial-gradient(ellipse at 30% 20%, hsla(30 60% 30% / 0.14), transparent 50%),
-    radial-gradient(ellipse at 75% 75%, hsla(20 70% 25% / 0.1), transparent 60%);
-  background-blend-mode: multiply, multiply, multiply;
+    radial-gradient(ellipse 120% 90% at center, transparent 40%, hsla(25 60% 20% / 0.35) 100%),
+    radial-gradient(ellipse at 25% 20%, hsla(30 70% 30% / 0.28), transparent 45%),
+    radial-gradient(ellipse at 75% 75%, hsla(20 80% 25% / 0.22), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.32' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.28  0 0 0 0 0.12  0 0 0 0.75 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply, multiply, multiply, multiply;
 }
 :root[data-theme='dark'] .texture-parchment {
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.7  0 0 0 0 0.55  0 0 0 0 0.35  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
-    radial-gradient(ellipse at 30% 20%, hsla(30 30% 60% / 0.12), transparent 50%),
-    radial-gradient(ellipse at 75% 75%, hsla(20 30% 55% / 0.08), transparent 60%);
-  background-blend-mode: screen, screen, screen;
+    radial-gradient(ellipse 120% 90% at center, transparent 40%, hsla(25 40% 60% / 0.25) 100%),
+    radial-gradient(ellipse at 25% 20%, hsla(30 30% 60% / 0.2), transparent 45%),
+    radial-gradient(ellipse at 75% 75%, hsla(20 30% 55% / 0.15), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.32' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.7  0 0 0 0 0.55  0 0 0 0 0.35  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: screen, screen, screen, screen;
 }
 
 .texture-cardstock {
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.4' numOctaves='1' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.18  0 0 0 0 0.15  0 0 0 0.32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0.48 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-blend-mode: multiply;
 }
 :root[data-theme='dark'] .texture-cardstock {
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.4' numOctaves='1' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.8  0 0 0 0 0.7  0 0 0 0.28 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.8  0 0 0 0 0.7  0 0 0 0.42 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-blend-mode: screen;
+}
+
+/* ── New materials: scroll, vellum, newsprint ──────────────── */
+
+.texture-scroll {
+  background-image:
+    radial-gradient(ellipse 105% 60% at center, transparent 35%, hsla(25 60% 18% / 0.55) 100%),
+    radial-gradient(ellipse 30% 100% at left, hsla(20 70% 22% / 0.4), transparent 60%),
+    radial-gradient(ellipse 30% 100% at right, hsla(20 70% 22% / 0.4), transparent 60%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='380' height='380'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.25' numOctaves='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.3  0 0 0 0 0.12  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply, multiply, multiply, multiply;
+}
+:root[data-theme='dark'] .texture-scroll {
+  background-image:
+    radial-gradient(ellipse 105% 60% at center, transparent 35%, hsla(25 40% 55% / 0.42) 100%),
+    radial-gradient(ellipse 30% 100% at left, hsla(20 30% 55% / 0.3), transparent 60%),
+    radial-gradient(ellipse 30% 100% at right, hsla(20 30% 55% / 0.3), transparent 60%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='380' height='380'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.25' numOctaves='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.7  0 0 0 0 0.55  0 0 0 0 0.35  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: screen, screen, screen, screen;
+}
+
+.texture-vellum {
+  background-image:
+    linear-gradient(180deg, hsla(50 60% 50% / 0.12), hsla(45 40% 40% / 0.06)),
+    repeating-linear-gradient(95deg, transparent 0, transparent 5px, hsla(40 30% 30% / 0.06) 6px),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='1' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0 0.15  0 0 0 0.22 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply, normal, multiply;
+}
+:root[data-theme='dark'] .texture-vellum {
+  background-image:
+    linear-gradient(180deg, hsla(50 30% 50% / 0.1), hsla(45 25% 45% / 0.05)),
+    repeating-linear-gradient(95deg, transparent 0, transparent 5px, hsla(40 20% 60% / 0.05) 6px),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='1' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.75  0 0 0 0 0.5  0 0 0 0.2 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: screen, normal, screen;
+}
+
+.texture-newsprint {
+  background-image:
+    linear-gradient(180deg, hsla(0 0% 30% / 0.05), hsla(0 0% 25% / 0.08)),
+    repeating-linear-gradient(90deg, transparent 0 33%, hsla(0 0% 30% / 0.18) 33% 33.4%, transparent 33.4% 66%, hsla(0 0% 30% / 0.18) 66% 66.4%, transparent 66.4% 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.15  0 0 0 0 0.15  0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply, multiply, multiply;
+}
+:root[data-theme='dark'] .texture-newsprint {
+  background-image:
+    linear-gradient(180deg, hsla(0 0% 70% / 0.08), hsla(0 0% 65% / 0.05)),
+    repeating-linear-gradient(90deg, transparent 0 33%, hsla(0 0% 70% / 0.14) 33% 33.4%, transparent 33.4% 66%, hsla(0 0% 70% / 0.14) 66% 66.4%, transparent 66.4% 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.85  0 0 0 0 0.85  0 0 0 0 0.85  0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: screen, screen, screen;
 }
 
 :focus-visible {

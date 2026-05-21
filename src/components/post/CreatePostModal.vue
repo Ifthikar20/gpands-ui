@@ -38,6 +38,9 @@ const paperTextures = [
   { id: 'grid', name: 'Grid' },
   { id: 'parchment', name: 'Parchment' },
   { id: 'cardstock', name: 'Cardstock' },
+  { id: 'scroll', name: 'Scroll' },
+  { id: 'vellum', name: 'Vellum' },
+  { id: 'newsprint', name: 'Newsprint' },
 ]
 
 const open = computed({
@@ -280,8 +283,8 @@ const tabs = [
   gap: 10px;
 }
 .swatch {
-  width: 64px;
-  height: 64px;
+  width: 76px;
+  height: 76px;
   border-radius: var(--radius-md);
   background-color: var(--paper-bg, var(--paper));
   /* background-image driven by .texture-* class so the preview shows

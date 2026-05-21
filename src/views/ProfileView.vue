@@ -1,12 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePostsStore } from '@/stores/posts.js'
 import { useUserStore } from '@/stores/user.js'
 import { users as dataUsers } from '@/data/mock-data.js'
 import PostCard from '@/components/post/PostCard.vue'
-import UserAvatar from '@/components/common/UserAvatar.vue'
-import { formatCount } from '@/composables/useVote.js'
 import { useRelativeTime } from '@/composables/useRelativeTime.js'
 
 const route = useRoute()
@@ -24,28 +22,20 @@ const user = computed(() => {
   }
   const found = dataUsers.pool.find((u) => u.username === username.value)
   return found
-    ? { username: found.username, displayName: '@' + found.username, karma: found.karma, bio: '', joined: Math.floor(Date.now() / 1000) - 200 * 86400 }
+    ? {
+        username: found.username,
+        displayName: found.username.replace(/_/g, ' '),
+        bio: '',
+        joined: Math.floor(Date.now() / 1000) - 200 * 86400,
+      }
     : null
 })
 
-const tab = ref('stories')
-
 const userPosts = computed(() => {
   if (!user.value) return []
-  return postsStore.posts.filter((p) => p.author === user.value.username)
-})
-
-const commentCount = computed(() => {
-  if (!user.value) return 0
-  let count = 0
-  const walk = (arr) => {
-    for (const c of arr) {
-      if (c.author === user.value.username) count++
-      if (c.children?.length) walk(c.children)
-    }
-  }
-  for (const p of postsStore.posts) walk(p.comments || [])
-  return count
+  return postsStore.posts
+    .filter((p) => p.author === user.value.username)
+    .sort((a, b) => b.createdAt - a.createdAt)
 })
 
 const joinedTime = useRelativeTime(() => user.value?.joined || 0)
@@ -53,203 +43,135 @@ const joinedTime = useRelativeTime(() => user.value?.joined || 0)
 
 <template>
   <div v-if="user" class="profile">
-    <header class="profile-head paper">
-      <div class="banner" />
-      <div class="head-content">
-        <UserAvatar :username="user.username" :size="96" online />
-        <div class="head-meta">
-          <h1>{{ user.displayName || user.username }}</h1>
-          <p class="handle">u/{{ user.username }}</p>
-          <p v-if="user.bio" class="bio">“{{ user.bio }}”</p>
-          <p class="joined">Joined {{ joinedTime }}</p>
-        </div>
-        <button class="follow-btn" v-if="username !== userStore.currentUser.username">Follow</button>
-        <button class="follow-btn ghost" v-else>Edit profile</button>
-      </div>
-
-      <div class="stats">
-        <div>
-          <div class="stat-num">{{ formatCount(user.karma) }}</div>
-          <div class="stat-label">Karma</div>
-        </div>
-        <div>
-          <div class="stat-num">{{ userPosts.length }}</div>
-          <div class="stat-label">Stories</div>
-        </div>
-        <div>
-          <div class="stat-num">{{ commentCount }}</div>
-          <div class="stat-label">Comments</div>
-        </div>
-      </div>
+    <header class="letterhead">
+      <p class="kicker">Letters from</p>
+      <h1 class="name">{{ user.displayName || user.username }}</h1>
+      <p class="meta">
+        <span>{{ userPosts.length }} {{ userPosts.length === 1 ? 'story' : 'stories' }}</span>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <span>Joined {{ joinedTime }}</span>
+      </p>
+      <div class="rule" aria-hidden="true" />
     </header>
 
-    <nav class="tabs">
-      <button class="tab" :class="{ active: tab === 'stories' }" @click="tab = 'stories'">Stories</button>
-      <button class="tab" :class="{ active: tab === 'comments' }" @click="tab = 'comments'">Comments</button>
-      <button class="tab" :class="{ active: tab === 'about' }" @click="tab = 'about'">About</button>
-    </nav>
-
-    <div v-if="tab === 'stories'" class="list">
+    <div v-if="userPosts.length" class="list">
       <PostCard v-for="p in userPosts" :key="p.id" :post="p" />
-      <div v-if="!userPosts.length" class="empty">
-        No stories yet. <span v-if="username === userStore.currentUser.username">Click <em>Post a story</em> to write one.</span>
-      </div>
     </div>
 
-    <div v-if="tab === 'comments'" class="empty">
-      {{ commentCount }} comment{{ commentCount === 1 ? '' : 's' }} across stories. Comment threads coming soon.
-    </div>
-
-    <div v-if="tab === 'about'" class="about-card paper">
-      <h3>About {{ user.displayName || 'u/' + user.username }}</h3>
-      <p v-if="user.bio">{{ user.bio }}</p>
-      <p v-else class="muted">No bio yet.</p>
-      <dl>
-        <div><dt>Karma</dt><dd>{{ formatCount(user.karma) }}</dd></div>
-        <div><dt>Joined</dt><dd>{{ joinedTime }}</dd></div>
-      </dl>
-    </div>
+    <p v-else class="empty">
+      No stories yet.
+      <span v-if="username === userStore.currentUser.username">
+        Click <em>Post a story</em> to write one.
+      </span>
+    </p>
   </div>
 
-  <div v-else class="missing paper">
-    <h2>User not found</h2>
-    <p>u/{{ route.params.username }} doesn't exist.</p>
-    <router-link to="/" class="back-link">Back to home</router-link>
+  <div v-else class="missing">
+    <p class="missing-text">No one called <em>{{ route.params.username }}</em> writes here.</p>
+    <router-link to="/" class="back-link">&larr; Return</router-link>
   </div>
 </template>
 
 <style scoped>
-.profile { display: flex; flex-direction: column; gap: var(--space-4); }
-.profile-head {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-.banner {
-  height: 120px;
-  background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
-}
-.head-content {
+.profile {
   display: flex;
-  align-items: flex-end;
-  gap: var(--space-4);
-  padding: 0 var(--space-5) var(--space-4);
-  margin-top: -48px;
-  position: relative;
-  flex-wrap: wrap;
-}
-.head-content :deep(.avatar) {
-  border: 4px solid var(--bg-surface);
-  box-shadow: var(--shadow-md);
-}
-.head-meta { flex: 1; min-width: 200px; padding-top: 50px; }
-.head-meta h1 { font-size: 22px; font-weight: 800; }
-.handle { color: var(--text-muted); font-size: 13px; }
-.bio {
-  margin-top: 6px;
-  font-family: var(--font-serif, Georgia, serif);
-  font-style: italic;
-  color: var(--text-secondary);
-}
-.joined { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
-
-.follow-btn {
-  margin-top: 50px;
-  padding: 9px 22px;
-  background: var(--accent-orange);
-  color: white;
-  font-weight: 700;
-  border-radius: var(--radius-pill);
-  transition: filter var(--dur-fast) var(--ease-out);
-}
-.follow-btn:hover { filter: brightness(1.1); }
-.follow-btn.ghost {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-strong);
-}
-
-.stats {
-  display: flex;
+  flex-direction: column;
   gap: var(--space-6);
-  padding: var(--space-4) var(--space-5);
-  border-top: 1px solid var(--border-subtle);
-  background: var(--bg-elevated);
-}
-.stat-num { font-size: 18px; font-weight: 800; }
-.stat-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
-.tabs {
+.letterhead {
+  text-align: center;
   display: flex;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 4px;
-  gap: 4px;
-  width: fit-content;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-4) 0 0;
 }
-.tab {
-  padding: 8px 18px;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-secondary);
-  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+.kicker {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
 }
-.tab:hover { color: var(--text-primary); }
-.tab.active {
-  background: var(--bg-elevated);
-  color: var(--text-primary);
+.name {
+  font-family: var(--font-script);
+  font-size: 48px;
+  font-weight: 500;
+  color: var(--accent-orange);
+  line-height: 1.05;
+  text-transform: capitalize;
+  letter-spacing: -0.005em;
+}
+.meta {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.sep { color: var(--text-muted); }
+.rule {
+  margin-top: var(--space-4);
+  height: 1px;
+  width: 80px;
+  background: var(--paper-line);
 }
 
-.list { display: flex; flex-direction: column; gap: var(--space-3); }
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
 .empty {
   text-align: center;
-  padding: var(--space-8);
-  background: var(--bg-surface);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 15px;
   color: var(--text-muted);
+  padding: var(--space-8) var(--space-4);
 }
-
-.about-card {
-  padding: var(--space-5);
-  border-radius: var(--radius-md);
+.empty em {
+  font-family: var(--font-typewriter);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
 }
-.about-card h3 { font-size: 16px; font-weight: 700; margin-bottom: var(--space-3); }
-.about-card .muted { color: var(--text-muted); }
-.about-card dl {
-  margin-top: var(--space-4);
-  display: grid;
-  gap: var(--space-2);
-}
-.about-card dl > div {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-top: 1px solid var(--border-subtle);
-  font-size: 13px;
-}
-.about-card dt { color: var(--text-muted); }
-.about-card dd { font-weight: 600; }
 
 .missing {
-  border-radius: var(--radius-md);
-  padding: var(--space-8);
   text-align: center;
+  padding: var(--space-8) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
 }
-.missing h2 { font-size: 18px; margin-bottom: 8px; }
+.missing-text {
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-body);
+}
 .back-link {
-  display: inline-block;
-  margin-top: var(--space-3);
-  padding: 8px 16px;
-  background: var(--accent-orange);
-  color: white;
-  border-radius: var(--radius-pill);
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   font-weight: 700;
+  color: var(--accent-orange);
+}
+.back-link:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .name { font-size: 38px; }
 }
 </style>

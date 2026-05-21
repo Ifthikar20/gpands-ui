@@ -92,6 +92,17 @@ const futures = [
       </ul>
     </section>
 
+    <section class="from-maker paper">
+      <p class="kicker">A note from the maker</p>
+      <div class="note-body">
+        <p>I built this because I couldn't find a place online where I felt safe sitting with someone else's story.</p>
+        <p>Reddit's loud. Twitter is louder. Substack feels like buying a subscription to a stranger's opinions. I wanted something quieter — a place where the janitor in Toledo and the grad student in Berlin sit on the same page, neither selling anything.</p>
+        <p>The premise is small. Pick a topic. Write what happened. Put it out there. Someone you'll never meet will read it and feel less alone.</p>
+        <p>That's the whole thing.</p>
+      </div>
+      <p class="signature">— a friend</p>
+    </section>
+
     <footer class="cta paper">
       <h2>Tell us what happened.</h2>
       <p>The version of this you tell to strangers might be the truest one.</p>
@@ -272,6 +283,48 @@ section h2 {
   gap: 8px;
 }
 .bullet { color: var(--accent-orange); font-weight: 700; }
+
+/* ── A note from the maker ────────────────────────────────── */
+.from-maker {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  border-radius: var(--radius-card);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.from-maker .kicker {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.from-maker .note-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  text-align: left;
+  max-width: 480px;
+  margin: 0 auto;
+  font-family: var(--font-typewriter);
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-primary);
+}
+.from-maker .signature {
+  font-family: var(--font-script);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--accent-orange);
+  line-height: 1;
+  margin-top: var(--space-2);
+  transform: rotate(-2deg);
+  display: inline-block;
+}
 
 .cta {
   text-align: center;
